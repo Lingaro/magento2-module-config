@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Orba\Config\Model\Csv\Config\Value\ValueParser">
+        <arguments>
+            <argument name="expressions" xsi:type="array">
+                <item xsi:type="object">\Orba\Config\Model\Csv\Config\Value\Expression\Env</item>
+                <item xsi:type="object">\Orba\Config\Model\Csv\Config\Value\Expression\File</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\Csv\Validator\RequiredColumnsValidator">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_VALUE</item>
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_CODE</item>
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\Csv\Config\Validator\RequiredFields">
+        <arguments>
+            <argument name="requiredFields" xsi:type="array">
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item xsi:type="array">
+                    <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
+                    <item name="values" xsi:type="array">
+                        <item name="name" xsi:type="string" />
+                        <item name="name" xsi:type="const">\Magento\Store\Model\ScopeInterface::SCOPE_STORE</item>
+                        <item name="name" xsi:type="const">\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE</item>
+                    </item>
+                </item>
+                <item xsi:type="array">
+                    <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                    <item name="values" xsi:type="array">
+                        <item name="name" xsi:type="string" />
+                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ALWAYS</item>
+                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_INIT</item>
+                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_IGNORED</item>
+                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ONCE</item>
+                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ABSENT</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\Csv\Config\ConfigFactory">
+        <arguments>
+            <argument name="configValidators" xsi:type="array">
+                <item xsi:type="object">Orba\Config\Model\Csv\Config\Validator\RequiredFields</item>
+                <item xsi:type="object">Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\Csv\Reader">
+        <arguments>
+            <argument name="fileValidators" xsi:type="array">
+                <item xsi:type="object">Orba\Config\Model\Csv\Validator\RequiredColumns</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
