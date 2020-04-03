@@ -8,6 +8,7 @@ namespace Orba\Config\Model\Csv;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\File\Csv;
+use Orba\Config\Model\Csv\Config\ConfigCollection;
 use Orba\Config\Model\Csv\Config\ConfigFactory;
 use Orba\Config\Model\Csv\Validator\RequiredColumnsValidator;
 
@@ -37,10 +38,10 @@ class Reader
     /**
      * @param string $path
      * @param string|null $env
-     * @return Config[]
+     * @return ConfigCollection
      * @throws LocalizedException
      */
-    public function readConfigFile(string $path, ?string $env = null): array
+    public function readConfigFile(string $path, ?string $env = null): ConfigCollection
     {
         try {
             $data = $this->csv->getData($path);
@@ -61,7 +62,7 @@ class Reader
             $key = $this->getConfigKey($config);
             $configs[$key] = $config;
         }
-        return $configs;
+        return new ConfigCollection($configs);
     }
 
     /**
