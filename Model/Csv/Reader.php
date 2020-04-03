@@ -8,7 +8,7 @@ namespace Orba\Config\Model\Csv;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\File\Csv;
-use Orba\Config\Model\Csv\Config\ConfigCollection;
+use Orba\Config\Helper\ConfigKeyGenerator;
 use Orba\Config\Model\Csv\Config\ConfigFactory;
 use Orba\Config\Model\Csv\Validator\RequiredColumnsValidator;
 
@@ -17,7 +17,11 @@ class Reader
     /** @var Csv */
     private $csv;
 
+    /** @var ConfigFactory */
     private $configFactory;
+
+    /** @var ConfigKeyGenerator */
+    private $configKeyGenerator;
 
     /** @var RequiredColumnsValidator */
     private $requiredColumnsValidator;
@@ -26,22 +30,27 @@ class Reader
      * Reader constructor.
      * @param Csv $csv
      * @param ConfigFactory $configFactory
+     * @param ConfigKeyGenerator $configKeyGenerator
      * @param RequiredColumnsValidator $requiredColumnsValidator
      */
-    public function __construct(Csv $csv, ConfigFactory $configFactory, RequiredColumnsValidator $requiredColumnsValidator)
-    {
+    public function __construct(
+        Csv $csv, ConfigFactory $configFactory,
+        ConfigKeyGenerator $configKeyGenerator,
+        RequiredColumnsValidator $requiredColumnsValidator
+    ) {
         $this->csv = $csv;
         $this->configFactory = $configFactory;
+        $this->configKeyGenerator = $configKeyGenerator;
         $this->requiredColumnsValidator = $requiredColumnsValidator;
     }
 
     /**
      * @param string $path
      * @param string|null $env
-     * @return ConfigCollection
+     * @return Config[]
      * @throws LocalizedException
      */
-    public function readConfigFile(string $path, ?string $env = null): ConfigCollection
+    public function readConfigFile(string $path, ?string $env = null): array
     {
         try {
             $data = $this->csv->getData($path);
@@ -59,18 +68,9 @@ class Reader
         $configs = [];
         foreach ($data as $row) {
             $config = $this->configFactory->create($headers, $row, $env);
-            $key = $this->getConfigKey($config);
+            $key = $this->configKeyGenerator->generateForCsv($config);
             $configs[$key] = $config;
         }
-        return new ConfigCollection($configs);
-    }
-
-    /**
-     * @param Config $config
-     * @return string
-     */
-    private function getConfigKey(Config $config): string
-    {
-        return $config->getPath() . $config->getScope() . $config->getCode();
+        return $configs;
     }
 }
