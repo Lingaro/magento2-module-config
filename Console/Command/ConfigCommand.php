@@ -7,14 +7,12 @@ namespace Orba\Config\Console\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
-use Magento\Framework\Exception\LocalizedException;
 use Orba\Config\Model\Csv\MultiReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Magento\Framework\Console\Cli;
 
 class ConfigCommand extends Command
@@ -23,9 +21,7 @@ class ConfigCommand extends Command
     public const COMMAND_DESCRIPTION = '';
 
     public const OPTION_DRY_RUN = 'dry-run';
-    public const OPTION_DRY_RUN_SHORT = 'dry-run';
     public const OPTION_ENV = 'env';
-    public const OPTION_ENV_SHORT = 'env';
 
     public const ARGUMENT_FILES = 'files';
 
@@ -54,13 +50,13 @@ class ConfigCommand extends Command
             ->setDescription(self::COMMAND_DESCRIPTION)
             ->addOption(
                 self::OPTION_ENV,
-                self::OPTION_ENV_SHORT,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Specify env for which config values are used'
             )
             ->addOption(
                 self::OPTION_DRY_RUN,
-                self::OPTION_DRY_RUN_SHORT,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Set the option to get more details about result'
             )

@@ -23,10 +23,19 @@ class Config
 
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
+    /** @var string */
     private $path;
+
+    /** @var string */
     private $value;
+
+    /** @var string */
     private $scope;
+
+    /** @var string|null */
     private $code;
+
+    /** @var string */
     private $state;
 
     /**
@@ -38,7 +47,7 @@ class Config
         $this->path = $data[self::FIELD_PATH];
         $this->value = $data[self::FIELD_VALUE];
         $this->scope = empty($data[self::FIELD_SCOPE]) ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : $data[self::FIELD_SCOPE];
-        $this->code = $data[self::FIELD_CODE];
+        $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];
     }
 
@@ -67,9 +76,9 @@ class Config
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }

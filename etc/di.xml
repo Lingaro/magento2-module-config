@@ -73,4 +73,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="pgUtilsInstallConfig" xsi:type="object">Orba\Config\Console\Command\ConfigCommand</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

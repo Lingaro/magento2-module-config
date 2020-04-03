@@ -6,6 +6,7 @@
 namespace Orba\Config\Model\Csv;
 
 use Magento\Framework\Exception\LocalizedException;
+use Orba\Config\Model\Csv\Config\ConfigCollection;
 
 class MultiReader
 {
@@ -24,15 +25,15 @@ class MultiReader
     /**
      * @param array $paths
      * @param string|null $env
-     * @return array
+     * @return ConfigCollection
      * @throws LocalizedException
      */
-    public function readConfigFiles(array $paths, ?string $env = null): array
+    public function readConfigFiles(array $paths, ?string $env = null): ConfigCollection
     {
         $configs = [];
         foreach ($paths as $path) {
-            $configs[] = $this->reader->readConfigFile($path, $env);
+            $configs[] = $this->reader->readConfigFile($path, $env)->getAll();
         }
-        return array_merge(...$configs);
+        return new ConfigCollection(array_merge(...$configs));
     }
 }
