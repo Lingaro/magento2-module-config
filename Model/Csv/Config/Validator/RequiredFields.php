@@ -22,13 +22,16 @@ class RequiredFields implements ValidatorInterface
     }
 
     /**
-     * @param array $data
+     * @param array $data Data from whole file
      * @throws LocalizedException
      */
     public function validate(array $data): void
     {
+        $dataLength = count($data);
         foreach ($this->requiredFields as $field) {
-            if ($data[$field] === '') {
+            $column = array_column($data, $field);
+            $nonEmptyColumn = array_filter($column);
+            if ($dataLength !== count($column) || $dataLength !== count($nonEmptyColumn)) {
                 throw new LocalizedException(
                     __('Column %1 can not be empty in config file', $field)
                 );

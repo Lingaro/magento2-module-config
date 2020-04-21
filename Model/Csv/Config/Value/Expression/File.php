@@ -30,11 +30,11 @@ class File extends AbstractExpression
 
     /**
      * @param string $value
-     * @return string
+     * @return string|null
      * @throws LocalizedException
      * @throws FileSystemException
      */
-    public function getRealValue(string $value): string
+    public function getRealValue(string $value): ?string
     {
         if (!$this->driverFile->isReadable($value)) {
             throw new LocalizedException(

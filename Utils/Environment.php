@@ -5,6 +5,11 @@
 
 namespace Orba\Config\Utils;
 
+/**
+ * Class Environment
+ * @package Orba\Config\Utils
+ * @codeCoverageIgnore
+ */
 class Environment
 {
     /**

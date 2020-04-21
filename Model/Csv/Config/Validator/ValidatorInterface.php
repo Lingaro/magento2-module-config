@@ -11,7 +11,7 @@ use Orba\Config\Model\Csv\Config;
 interface ValidatorInterface
 {
     /**
-     * @param array $data
+     * @param array $data Data from whole file
      * @throws LocalizedException
      */
     public function validate(array $data): void;

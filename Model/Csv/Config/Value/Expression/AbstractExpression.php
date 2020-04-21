@@ -5,9 +5,14 @@
 
 namespace Orba\Config\Model\Csv\Config\Value\Expression;
 
+/**
+ * Class AbstractExpression
+ * @package Orba\Config\Model\Csv\Config\Value\Expression
+ * @codeCoverageIgnore
+ */
 abstract class AbstractExpression
 {
-    protected const BASE_EXPRESSION = '/\{\{NAME\s([^\s\}]*)\}\}/';
+    protected const BASE_EXPRESSION = '/\{\{NAME\s?([^\s\}]*)\}\}/';
 
     /**
      * @param string $rawValue
@@ -41,7 +46,7 @@ abstract class AbstractExpression
 
     /**
      * @param string $value
-     * @return string
+     * @return string|null
      */
-    abstract public function getRealValue(string $value): string;
+    abstract public function getRealValue(string $value): ?string;
 }

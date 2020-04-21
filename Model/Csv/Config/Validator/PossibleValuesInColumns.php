@@ -22,15 +22,24 @@ class PossibleValuesInColumns implements ValidatorInterface
     }
 
     /**
-     * @param array $data
+     * @param array $data Data from whole file
      * @throws LocalizedException
      */
     public function validate(array $data): void
     {
         foreach ($this->columns as $column) {
-            if (!in_array($column['values'], $data[$column['name']])) {
+            $columnValues = array_column($data, $column['name']);
+
+            $nonPermittedValues = array_filter(
+                $columnValues,
+                function ($value) use ($column) {
+                    return !in_array($value, $column['values']);
+                }
+            );
+
+            if ($nonPermittedValues !== []) {
                 throw new LocalizedException(
-                    __('Column %1 contains not allowed value %2', $column['name'], $data[$column['name']])
+                    __('Column %1 contains not allowed values %2', $column['name'], implode(', ', $nonPermittedValues))
                 );
             }
         }

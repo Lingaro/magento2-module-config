@@ -34,9 +34,9 @@ class Env extends AbstractExpression
 
     /**
      * @param string $value
-     * @return string
+     * @return string|null
      */
-    public function getRealValue(string $value): string
+    public function getRealValue(string $value): ?string
     {
         return $this->environment->getVariable($value);
     }

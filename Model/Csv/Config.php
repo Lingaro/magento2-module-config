@@ -7,6 +7,11 @@ namespace Orba\Config\Model\Csv;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
+/**
+ * Class Config
+ * @package Orba\Config\Model\Csv
+ * @codeCoverageIgnore
+ */
 class Config
 {
     public const STATE_ALWAYS = 'always';
@@ -45,7 +50,7 @@ class Config
     public function __construct(array $data)
     {
         $this->path = $data[self::FIELD_PATH];
-        $this->value = $data[self::FIELD_VALUE];
+        $this->value = $data[self::FIELD_VALUE] ?? null;
         $this->scope = empty($data[self::FIELD_SCOPE]) ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : $data[self::FIELD_SCOPE];
         $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];

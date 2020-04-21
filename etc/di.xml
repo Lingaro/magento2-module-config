@@ -9,50 +9,55 @@
     <type name="Orba\Config\Model\Csv\Config\Value\ValueParser">
         <arguments>
             <argument name="expressions" xsi:type="array">
-                <item xsi:type="object">\Orba\Config\Model\Csv\Config\Value\Expression\Env</item>
-                <item xsi:type="object">\Orba\Config\Model\Csv\Config\Value\Expression\File</item>
+                <item name="env" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\Env</item>
+                <item name="file" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\File</item>
+                <item name="null" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\NullExpr</item>
             </argument>
         </arguments>
     </type>
     <type name="Orba\Config\Model\Csv\Validator\RequiredColumnsValidator">
         <arguments>
             <argument name="columns" xsi:type="array">
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_VALUE</item>
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_CODE</item>
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                <item name="path" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item name="value" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_VALUE</item>
+                <item name="scope" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
+                <item name="code" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_CODE</item>
+                <item name="state" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
             </argument>
         </arguments>
     </type>
     <type name="Orba\Config\Model\Csv\Config\Validator\RequiredFields">
         <arguments>
             <argument name="requiredFields" xsi:type="array">
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
-                <item xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                <item name="path" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item name="state" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
             </argument>
         </arguments>
     </type>
     <type name="Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns">
         <arguments>
             <argument name="columns" xsi:type="array">
-                <item xsi:type="array">
+                <item name="scope" xsi:type="array">
                     <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
                     <item name="values" xsi:type="array">
-                        <item name="name" xsi:type="string" />
-                        <item name="name" xsi:type="const">\Magento\Store\Model\ScopeInterface::SCOPE_STORE</item>
-                        <item name="name" xsi:type="const">\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE</item>
+                        <item name="empty" xsi:type="string" />
+                        <item name="store" xsi:type="const">
+                            Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                        </item>
+                        <item name="website" xsi:type="const">
+                            Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE
+                        </item>
                     </item>
                 </item>
-                <item xsi:type="array">
+                <item name="state" xsi:type="array">
                     <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
                     <item name="values" xsi:type="array">
-                        <item name="name" xsi:type="string" />
-                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ALWAYS</item>
-                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_INIT</item>
-                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_IGNORED</item>
-                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ONCE</item>
-                        <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ABSENT</item>
+                        <item name="empty" xsi:type="string" />
+                        <item name="always" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ALWAYS</item>
+                        <item name="init" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_INIT</item>
+                        <item name="ignored" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_IGNORED</item>
+                        <item name="once" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ONCE</item>
+                        <item name="absent" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ABSENT</item>
                     </item>
                 </item>
             </argument>
@@ -61,15 +66,12 @@
     <type name="Orba\Config\Model\Csv\Config\ConfigFactory">
         <arguments>
             <argument name="configValidators" xsi:type="array">
-                <item xsi:type="object">Orba\Config\Model\Csv\Config\Validator\RequiredFields</item>
-                <item xsi:type="object">Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Orba\Config\Model\Csv\Reader">
-        <arguments>
-            <argument name="fileValidators" xsi:type="array">
-                <item xsi:type="object">Orba\Config\Model\Csv\Validator\RequiredColumns</item>
+                <item name="requiredFields" xsi:type="object">
+                    Orba\Config\Model\Csv\Config\Validator\RequiredFields
+                </item>
+                <item name="possibleValuesInColumns" xsi:type="object">
+                    Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns
+                </item>
             </argument>
         </arguments>
     </type>
