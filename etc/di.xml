@@ -52,7 +52,6 @@
                 <item name="state" xsi:type="array">
                     <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
                     <item name="values" xsi:type="array">
-                        <item name="empty" xsi:type="string" />
                         <item name="always" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ALWAYS</item>
                         <item name="init" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_INIT</item>
                         <item name="ignored" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_IGNORED</item>
