@@ -53,6 +53,11 @@ class ConfigFactoryTest extends BaseTestCase
             ->with($data[$valueColumn])
             ->willReturn($data[$valueColumn]);
 
+        $this->arguments['valueGetter']->expects($this->once())
+            ->method('getValueWithBackendModel')
+            ->with($data[Config::FIELD_PATH], $data[$valueColumn])
+            ->willReturn($data[$valueColumn]);
+
         $this->factory = $this->objectManager->getObject(ConfigFactory::class, $this->arguments);
 
         $data[Config::FIELD_VALUE] = $data[$valueColumn];

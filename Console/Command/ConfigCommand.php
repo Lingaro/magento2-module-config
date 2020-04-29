@@ -7,6 +7,7 @@ namespace Orba\Config\Console\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Magento\Framework\Exception\LocalizedException;
 use Orba\Config\Model\Csv\MultiReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -76,10 +77,13 @@ class ConfigCommand extends Command
     {
         try {
             // Set setup code go in setup mode
-            $this->appState->setAreaCode(Area::AREA_GLOBAL);
-
+            $this->appState->setAreaCode(Area::AREA_ADMINHTML);
+            $files = $input->getArgument(self::ARGUMENT_FILES);
+            if (count($files) === 0) {
+                throw new LocalizedException(__('Please specify at least one file with configuration'));
+            }
             $configs = $this->csvReader->readConfigFiles(
-                $input->getArgument(self::ARGUMENT_FILES),
+                $files,
                 $input->getOption(self::OPTION_ENV)
             );
         } catch (\Exception $e) {

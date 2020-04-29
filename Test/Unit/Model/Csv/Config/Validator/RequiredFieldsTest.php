@@ -47,7 +47,7 @@ class RequiredFieldsTest extends BaseTestCase
      */
     public function testValidationThrowExceptionWhenRequiredColumnDoesntExist(array $data): void
     {
-        unset($data[count($data)-1][self::REQUIRED_FIELDS[0]]);
+        unset($data[self::REQUIRED_FIELDS[0]]);
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessageRegExp('/Column .* can not be empty in config file/');
@@ -63,7 +63,7 @@ class RequiredFieldsTest extends BaseTestCase
      */
     public function testValidationThrowExceptionWhenRequiredColumnIsEmpty(array $data): void
     {
-        $data[count($data)-1][self::REQUIRED_FIELDS[0]] = '';
+        $data[self::REQUIRED_FIELDS[0]] = '';
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessageRegExp('/Column .* can not be empty in config file/');
@@ -76,20 +76,11 @@ class RequiredFieldsTest extends BaseTestCase
         return [
             [
                 [
-                    [
-                        'path' => '/a/b/c',
-                        'code' => '',
-                        'value' => '43',
-                        'scope' => 'website',
-                        'state' => 'once'
-                    ],
-                    [
-                        'path' => '/a/x/c',
-                        'code' => 'de',
-                        'value' => 'username',
-                        'scope' => 'website',
-                        'state' => 'once'
-                    ]
+                    'path' => '/a/b/c',
+                    'code' => '',
+                    'value' => '43',
+                    'scope' => 'website',
+                    'state' => 'once'
                 ]
             ]
         ];

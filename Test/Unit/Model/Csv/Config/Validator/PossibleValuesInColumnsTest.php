@@ -58,7 +58,7 @@ class PossibleValuesInColumnsTest extends BaseTestCase
      */
     public function testValidationDoesntThrowExceptionWhenColumnDoesntExistForSomeRows(array $data): void
     {
-        unset($data[count($data)-1]['scope']);
+        unset($data['scope']);
 
         $this->assertEmpty($this->validator->validate($data));
     }
@@ -71,10 +71,10 @@ class PossibleValuesInColumnsTest extends BaseTestCase
      */
     public function testValidationThrowExceptionWhenColumnContainWrongValue(array $data): void
     {
-        $data[count($data)-1]['scope'] .= 's1';
+        $data['scope'] .= 's1';
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Column .* contains not allowed values/');
+        $this->expectExceptionMessageRegExp('/Column .* contains not allowed value/');
 
         $this->validator->validate($data);
     }
@@ -84,18 +84,8 @@ class PossibleValuesInColumnsTest extends BaseTestCase
         return [
             [
                 [
-                    [
-                        'scope' => 'website',
-                        'state' => 'once'
-                    ],
-                    [
-                        'scope' => 'store',
-                        'state' => 'init'
-                    ],
-                    [
-                        'scope' => 'website',
-                        'state' => 'always'
-                    ]
+                    'scope' => 'website',
+                    'state' => 'once'
                 ]
             ]
         ];

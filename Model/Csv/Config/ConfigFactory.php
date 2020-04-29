@@ -15,17 +15,22 @@ class ConfigFactory
     /** @var ValueParser */
     private $valueParser;
 
+    /** @var ValueParser */
+    private $valueGetter;
+
     /** @var ValidatorInterface[] */
     private $configValidators;
 
     /**
      * ConfigFactory constructor.
      * @param ValueParser $valueParser
+     * @param ValueGetter $valueGetter
      * @param ValidatorInterface[] $configValidators
      */
-    public function __construct(ValueParser $valueParser, array $configValidators)
+    public function __construct(ValueParser $valueParser, ValueGetter $valueGetter, array $configValidators)
     {
         $this->valueParser = $valueParser;
+        $this->valueGetter = $valueGetter;
         $this->configValidators = $configValidators;
     }
 
@@ -49,6 +54,11 @@ class ConfigFactory
             throw new LocalizedException(__('Value column %1 does not exist', $valueColumnName));
         }
         $data[Config::FIELD_VALUE] = $this->valueParser->parse($data[$valueColumnName]);
+
+        $data[Config::FIELD_VALUE] = $this->valueGetter->getValueWithBackendModel(
+            $data[Config::FIELD_PATH],
+            $data[Config::FIELD_VALUE]
+        );
 
         return new Config($data);
     }
