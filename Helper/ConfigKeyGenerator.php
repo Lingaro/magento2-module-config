@@ -5,16 +5,26 @@
 
 namespace Orba\Config\Helper;
 
-use Orba\Config\Model\Csv\Config;
+use Orba\Config\Model\Csv\Config as CsvConfig;
+use Orba\Config\Model\Config as DbConfig;
 
 class ConfigKeyGenerator
 {
     /**
-     * @param Config $config
+     * @param CsvConfig $config
      * @return string
      */
-    public function generateForCsv(Config $config): string
+    public function generateForCsv(CsvConfig $config): string
     {
         return $config->getPath() . $config->getScope() . $config->getCode();
+    }
+
+    /**
+     * @param DbConfig $config
+     * @return string
+     */
+    public function generateForDb(DbConfig $config): string
+    {
+        return $config->getPath() . $config->getScope() . $config->getScopeCode();
     }
 }

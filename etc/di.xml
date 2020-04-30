@@ -42,10 +42,10 @@
                     <item name="values" xsi:type="array">
                         <item name="empty" xsi:type="string" />
                         <item name="store" xsi:type="const">
-                            Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                            Magento\Store\Model\ScopeInterface::SCOPE_STORES
                         </item>
                         <item name="website" xsi:type="const">
-                            Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE
+                            Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES
                         </item>
                     </item>
                 </item>

@@ -31,6 +31,7 @@ class ConfigCommand extends Command
 
     /** @var MultiReader */
     private $csvReader;
+    private $configRepository;
 
     /**
      * ConfigCommand constructor.
@@ -38,11 +39,12 @@ class ConfigCommand extends Command
      * @param MultiReader $csvReader
      * @param string|null $name
      */
-    public function __construct(State $appState, MultiReader $csvReader, ?string $name = null)
+    public function __construct(State $appState, MultiReader $csvReader, \Orba\Config\Model\Config\ConfigRepository $configRepository, ?string $name = null)
     {
         parent::__construct($name);
         $this->appState = $appState;
         $this->csvReader = $csvReader;
+        $this->configRepository = $configRepository;
     }
 
     protected function configure()
@@ -86,6 +88,7 @@ class ConfigCommand extends Command
                 $files,
                 $input->getOption(self::OPTION_ENV)
             );
+            $dbConfigs = $this->configRepository->getAllConfigs();
         } catch (\Exception $e) {
             $output->writeln('<error>'. $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;

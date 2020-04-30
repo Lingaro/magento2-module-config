@@ -1,4 +1,7 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
 
 namespace Orba\Config\Model\Csv\Config;
 
