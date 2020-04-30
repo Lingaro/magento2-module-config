@@ -8,6 +8,11 @@ namespace Orba\Config\Model\ResourceModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Orba\Config\Model\Config as ConfigModel;
 
+/**
+ * Class Config
+ * @package Orba\Config\Model\ResourceModel
+ * @codeCoverageIgnore
+ */
 class Config extends AbstractDb
 {
     const TABLE_NAME = 'core_config_data';

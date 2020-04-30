@@ -6,13 +6,14 @@
 namespace Orba\Config\Model\Csv;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Orba\Config\Api\ConfigInterface;
 
 /**
  * Class Config
  * @package Orba\Config\Model\Csv
  * @codeCoverageIgnore
  */
-class Config
+class Config implements ConfigInterface
 {
     public const STATE_ALWAYS = 'always';
     public const STATE_INIT = 'init';
@@ -72,18 +73,12 @@ class Config
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
-    public function getScope(): string
+    public function getScopeType(): string
     {
         return $this->scope;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getCode(): ?string
+    public function getScopeCode(): ?string
     {
         return $this->code;
     }

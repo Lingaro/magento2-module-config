@@ -6,6 +6,7 @@
 namespace Orba\Config\Model\Csv\Config;
 
 use Magento\Framework\Exception\LocalizedException;
+use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Config\Validator\ValidatorInterface;
 use Orba\Config\Model\Csv\Config\Value\ValueParser;
@@ -36,12 +37,12 @@ class ConfigFactory
 
     /**
      * @param array $headers
-     * @param string[] $values
+     * @param array $values
      * @param string|null $env
-     * @return Config
+     * @return ConfigInterface
      * @throws LocalizedException
      */
-    public function create(array $headers, array $values, ?string $env = null): Config
+    public function create(array $headers, array $values, ?string $env = null): ConfigInterface
     {
         $data = array_combine($headers, $values);
 

@@ -5,6 +5,7 @@ namespace Orba\Config\Test\Unit\Model\Csv;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
+use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Reader;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,7 +38,7 @@ class ReaderTest extends BaseTestCase
         $this->arguments['configFactory']->expects($this->never())
             ->method('create');
         $this->arguments['configKeyGenerator']->expects($this->never())
-            ->method('generateForCsv');
+            ->method('generateKey');
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessageRegExp('/File .* can not be read/');
@@ -76,8 +77,8 @@ class ReaderTest extends BaseTestCase
             ->method('validate')
             ->with($data);
 
-        $config1 = $this->basicMock(Config::class);
-        $config2 = $this->basicMock(Config::class);
+        $config1 = $this->basicMock(ConfigInterface::class);
+        $config2 = $this->basicMock(ConfigInterface::class);
         $this->arguments['configFactory']->expects($this->exactly(2))
             ->method('create')
             ->withConsecutive(
@@ -88,7 +89,7 @@ class ReaderTest extends BaseTestCase
         $key1 = 'key1';
         $key2 = 'key2';
         $this->arguments['configKeyGenerator']->expects($this->exactly(2))
-            ->method('generateForCsv')
+            ->method('generateKey')
             ->withConsecutive([$config1], [$config2])
             ->willReturnOnConsecutiveCalls($key1, $key2);
 

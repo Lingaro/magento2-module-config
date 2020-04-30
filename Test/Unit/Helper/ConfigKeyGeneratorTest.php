@@ -6,8 +6,8 @@
 namespace Orba\Config\Test\Unit\Helper;
 
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
+use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Helper\ConfigKeyGenerator;
-use Orba\Config\Model\Csv\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ConfigKeyGeneratorTest extends BaseTestCase
@@ -36,20 +36,20 @@ class ConfigKeyGeneratorTest extends BaseTestCase
         string $expectedKey
     ): void {
         /** @var Config|MockObject $configMock */
-        $configMock = $this->basicMock(Config::class);
+        $configMock = $this->basicMock(ConfigInterface::class);
         $configMock->expects($this->once())
             ->method('getPath')
             ->willReturn($path);
         $configMock->expects($this->once())
-            ->method('getScope')
+            ->method('getScopeType')
             ->willReturn($scope);
         $configMock->expects($this->once())
-            ->method('getCode')
+            ->method('getScopeCode')
             ->willReturn($code);
         $configMock->expects($this->never())
             ->method('getValue');
 
-        $generatedKey = $this->generator->generateForCsv($configMock);
+        $generatedKey = $this->generator->generateKey($configMock);
 
         $this->assertEquals($expectedKey, $generatedKey);
     }

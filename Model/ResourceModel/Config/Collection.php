@@ -9,6 +9,11 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Orba\Config\Model\Config as ConfigModel;
 use Orba\Config\Model\ResourceModel\Config as ConfigResourceModel;
 
+/**
+ * Class Collection
+ * @package Orba\Config\Model\ResourceModel\Config
+ * @codeCoverageIgnore
+ */
 class Collection extends AbstractCollection
 {
     protected function _construct()

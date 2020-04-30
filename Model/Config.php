@@ -5,27 +5,52 @@
 
 namespace Orba\Config\Model;
 
-class Config extends \Magento\Config\Model\Config
+use Magento\Config\Model\Config as ParentConfig;
+use Orba\Config\Api\ConfigInterface;
+
+/**
+ * Class Config
+ * @package Orba\Config\Model
+ * @codeCoverageIgnore
+ */
+class Config extends ParentConfig implements ConfigInterface
 {
+    /**
+     * @return string
+     */
     public function getConfigId(): string
     {
         return $this->getData('config_id');
     }
 
+    /**
+     * @return string
+     */
     public function getPath(): string
     {
         return $this->getData('path');
     }
 
-    public function getScopeType()
+    public function getScopeType(): string
     {
         $this->load();
         return parent::getScope();
     }
 
-    public function getScopeCode()
+    /**
+     * @return string|null
+     */
+    public function getScopeCode(): ?string
     {
         $this->load();
         return parent::getScopeCode();
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->getData('value');
     }
 }

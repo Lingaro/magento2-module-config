@@ -68,7 +68,7 @@ class Reader
         $configs = [];
         foreach ($data as $row) {
             $config = $this->configFactory->create($headers, $row, $env);
-            $key = $this->configKeyGenerator->generateForCsv($config);
+            $key = $this->configKeyGenerator->generateKey($config);
             $configs[$key] = $config;
         }
         return $configs;

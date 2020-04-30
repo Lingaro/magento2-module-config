@@ -7,9 +7,8 @@ namespace Orba\Config\Model\Config;
 
 use Magento\Config\Model\Config;
 use Magento\Config\Model\Config\Factory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
-use Orba\Config\Model\Csv\Config as CsvConfig;
+use Orba\Config\Api\ConfigInterface;
 
 class ConfigFactory
 {
@@ -26,19 +25,19 @@ class ConfigFactory
     }
 
     /**
-     * @param CsvConfig $csvConfig
+     * @param ConfigInterface $csvConfig
      * @return Config
      */
-    public function create(CsvConfig $csvConfig): Config
+    public function create(ConfigInterface $csvConfig): Config
     {
         $config = $this->originalConfigFactory->create();
         $config->setDataByPath($csvConfig->getPath(), $csvConfig->getValue());
-        switch ($csvConfig->getScope()) {
+        switch ($csvConfig->getScopeType()) {
             case ScopeInterface::SCOPE_STORES:
-                $config->setStore($csvConfig->getCode());
+                $config->setStore($csvConfig->getScopeCode());
                 break;
             case ScopeInterface::SCOPE_WEBSITES:
-                $config->setWebsite($csvConfig->getCode());
+                $config->setWebsite($csvConfig->getScopeCode());
                 break;
         }
         return $config;
