@@ -17,7 +17,7 @@ class Config extends \Magento\Config\Model\Config
         return $this->getData('path');
     }
 
-    public function getScope()
+    public function getScopeType()
     {
         $this->load();
         return parent::getScope();

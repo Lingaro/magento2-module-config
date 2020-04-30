@@ -25,6 +25,6 @@ class ConfigKeyGenerator
      */
     public function generateForDb(DbConfig $config): string
     {
-        return $config->getPath() . $config->getScope() . $config->getScopeCode();
+        return $config->getPath() . $config->getScopeType() . $config->getScopeCode();
     }
 }

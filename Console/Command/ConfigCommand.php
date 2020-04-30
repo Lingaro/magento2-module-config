@@ -84,7 +84,7 @@ class ConfigCommand extends Command
             if (count($files) === 0) {
                 throw new LocalizedException(__('Please specify at least one file with configuration'));
             }
-            $configs = $this->csvReader->readConfigFiles(
+            $csvConfigs = $this->csvReader->readConfigFiles(
                 $files,
                 $input->getOption(self::OPTION_ENV)
             );
