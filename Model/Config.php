@@ -16,9 +16,9 @@ use Orba\Config\Api\ConfigInterface;
 class Config extends ParentConfig implements ConfigInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getConfigId(): string
+    public function getConfigId(): ?string
     {
         return $this->getData('config_id');
     }

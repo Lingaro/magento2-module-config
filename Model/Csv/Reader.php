@@ -11,6 +11,8 @@ use Magento\Framework\File\Csv;
 use Orba\Config\Helper\ConfigKeyGenerator;
 use Orba\Config\Model\Csv\Config\ConfigFactory;
 use Orba\Config\Model\Csv\Validator\RequiredColumnsValidator;
+use Orba\Config\Model\MappedConfigCollection;
+use Orba\Config\Model\MappedConfigCollectionFactory;
 
 class Reader
 {
@@ -26,31 +28,37 @@ class Reader
     /** @var RequiredColumnsValidator */
     private $requiredColumnsValidator;
 
+    /** @var MappedConfigCollection */
+    private $mappedConfigCollection;
+
     /**
      * Reader constructor.
      * @param Csv $csv
      * @param ConfigFactory $configFactory
      * @param ConfigKeyGenerator $configKeyGenerator
      * @param RequiredColumnsValidator $requiredColumnsValidator
+     * @param MappedConfigCollectionFactory $mappedConfigCollectionFactory
      */
     public function __construct(
         Csv $csv, ConfigFactory $configFactory,
         ConfigKeyGenerator $configKeyGenerator,
-        RequiredColumnsValidator $requiredColumnsValidator
+        RequiredColumnsValidator $requiredColumnsValidator,
+        MappedConfigCollectionFactory $mappedConfigCollectionFactory
     ) {
         $this->csv = $csv;
         $this->configFactory = $configFactory;
         $this->configKeyGenerator = $configKeyGenerator;
         $this->requiredColumnsValidator = $requiredColumnsValidator;
+        $this->mappedConfigCollection = $mappedConfigCollectionFactory->create();
     }
 
     /**
      * @param string $path
      * @param string|null $env
-     * @return Config[]
+     * @return MappedConfigCollection
      * @throws LocalizedException
      */
-    public function readConfigFile(string $path, ?string $env = null): array
+    public function readConfigFile(string $path, ?string $env = null): MappedConfigCollection
     {
         try {
             $data = $this->csv->getData($path);
@@ -65,12 +73,10 @@ class Reader
         $headers = $data[0];
         $data = array_slice($data, 1);
 
-        $configs = [];
         foreach ($data as $row) {
             $config = $this->configFactory->create($headers, $row, $env);
-            $key = $this->configKeyGenerator->generateKey($config);
-            $configs[$key] = $config;
+            $this->mappedConfigCollection->add($config);
         }
-        return $configs;
+        return $this->mappedConfigCollection;
     }
 }

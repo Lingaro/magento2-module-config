@@ -6,7 +6,7 @@
 namespace Orba\Config\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Orba\Config\Model\Config as ConfigModel;
+use Orba\Config\Api\ConfigInterface;
 
 /**
  * Class Config
@@ -24,15 +24,17 @@ class Config extends AbstractDb
     }
 
     /**
-     * @param ConfigModel[] $configs
+     * @param ConfigInterface[] $configs
      */
     public function bulkRemove(array $configs): void
     {
-        $ids = array_map(
-            function (ConfigModel $config): int {
-                return $config->getConfigId();
-            },
-            $configs
+        $ids = array_filter(
+            array_map(
+                function (ConfigInterface $config): ?string {
+                    return $config->getConfigId();
+                },
+                $configs
+            )
         );
         $connection = $this->getConnection();
         $connection->delete(

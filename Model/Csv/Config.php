@@ -58,6 +58,14 @@ class Config implements ConfigInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getConfigId(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getPath(): string
@@ -86,7 +94,7 @@ class Config implements ConfigInterface
     /**
      * @return string
      */
-    public function getState(): string
+    public function getState(): ?string
     {
         return $this->state;
     }
