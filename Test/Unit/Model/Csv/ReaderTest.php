@@ -9,6 +9,8 @@ use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Reader;
 use PHPUnit\Framework\MockObject\MockObject;
+use Orba\Config\Model\MappedConfigCollection;
+use Orba\Config\Model\MappedConfigCollectionFactory;
 
 class ReaderTest extends BaseTestCase
 {
@@ -18,10 +20,24 @@ class ReaderTest extends BaseTestCase
     /** @var Reader */
     private $reader;
 
+    /** @var MappedConfigCollection|MockObject */
+    private $mappedConfigCollectionMock;
+
     protected function setUp()
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(Reader::class);
+
+        $mappedConfigCollectionFactoryMock = $this->arguments['mappedConfigCollectionFactory'];
+        $this->mappedConfigCollectionMock = $this
+            ->getMockBuilder(MappedConfigCollection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mappedConfigCollectionFactoryMock
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn($this->mappedConfigCollectionMock);
+
         $this->reader = $this->objectManager->getObject(Reader::class, $this->arguments);
     }
 
@@ -37,8 +53,6 @@ class ReaderTest extends BaseTestCase
             ->method('validate');
         $this->arguments['configFactory']->expects($this->never())
             ->method('create');
-        $this->arguments['configKeyGenerator']->expects($this->never())
-            ->method('generateKey');
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessageRegExp('/File .* can not be read/');
@@ -86,17 +100,6 @@ class ReaderTest extends BaseTestCase
                 [$data[0], $data[2], $env]
             )->willReturnOnConsecutiveCalls($config1, $config2);
 
-        $key1 = 'key1';
-        $key2 = 'key2';
-        $this->arguments['configKeyGenerator']->expects($this->exactly(2))
-            ->method('generateKey')
-            ->withConsecutive([$config1], [$config2])
-            ->willReturnOnConsecutiveCalls($key1, $key2);
-
-        $expected = [
-            $key1 => $config1,
-            $key2 => $config2
-        ];
-        $this->assertSame($expected, $this->reader->readConfigFile($path, $env));
+        $this->assertSame($this->mappedConfigCollectionMock, $this->reader->readConfigFile($path, $env));
     }
 }

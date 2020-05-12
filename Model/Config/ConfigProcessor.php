@@ -27,7 +27,7 @@ class ConfigProcessor
      */
     public function process(OperationsRegistry $operationsRegistry): void
     {
-        $this->configRepository->updateConfigs($operationsRegistry->getToAddConfigs());
+        $this->configRepository->insertConfigs($operationsRegistry->getToAddConfigs());
         $configsToUpdate = array_map(
             function (ConfigChange $configChange): ConfigInterface {
                 return $configChange->getNewConfig();

@@ -41,6 +41,9 @@
                     <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
                     <item name="values" xsi:type="array">
                         <item name="empty" xsi:type="string" />
+                        <item name="default" xsi:type="const">
+                            Magento\Framework\App\ScopeInterface::SCOPE_DEFAULT
+                        </item>
                         <item name="store" xsi:type="const">
                             Magento\Store\Model\ScopeInterface::SCOPE_STORES
                         </item>
@@ -70,6 +73,9 @@
                 </item>
                 <item name="possibleValuesInColumns" xsi:type="object">
                     Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns
+                </item>
+                <item name="availableScope" xsi:type="object">
+                    Orba\Config\Model\Csv\Config\Validator\AvailableScope
                 </item>
             </argument>
         </arguments>

@@ -44,7 +44,7 @@ class ConfigKeyGeneratorTest extends BaseTestCase
             ->method('getScopeType')
             ->willReturn($scope);
         $configMock->expects($this->once())
-            ->method('getScopeCode')
+            ->method('getScopeId')
             ->willReturn($code);
         $configMock->expects($this->never())
             ->method('getValue');
@@ -63,10 +63,10 @@ class ConfigKeyGeneratorTest extends BaseTestCase
     {
         return [
             'all data is available' => [
-                'config/path', 'default', 'code', 'config/pathdefaultcode'
+                'config/path', 'default', 2, 'config/path|default|2'
             ],
             'code is null' => [
-                'config/path', 'default', null, 'config/pathdefault'
+                'config/path', 'default', null, 'config/path|default|'
             ]
         ];
     }

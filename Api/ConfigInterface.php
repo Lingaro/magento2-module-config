@@ -9,4 +9,6 @@ interface ConfigInterface
     public function getValue(): string;
     public function getScopeType(): string;
     public function getScopeCode(): ?string;
+    public function getScopeId(): ?int;
+    public function getAllData() : array;
 }

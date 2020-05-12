@@ -8,7 +8,6 @@ namespace Orba\Config\Model\Csv;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\File\Csv;
-use Orba\Config\Helper\ConfigKeyGenerator;
 use Orba\Config\Model\Csv\Config\ConfigFactory;
 use Orba\Config\Model\Csv\Validator\RequiredColumnsValidator;
 use Orba\Config\Model\MappedConfigCollection;
@@ -22,9 +21,6 @@ class Reader
     /** @var ConfigFactory */
     private $configFactory;
 
-    /** @var ConfigKeyGenerator */
-    private $configKeyGenerator;
-
     /** @var RequiredColumnsValidator */
     private $requiredColumnsValidator;
 
@@ -35,19 +31,17 @@ class Reader
      * Reader constructor.
      * @param Csv $csv
      * @param ConfigFactory $configFactory
-     * @param ConfigKeyGenerator $configKeyGenerator
      * @param RequiredColumnsValidator $requiredColumnsValidator
      * @param MappedConfigCollectionFactory $mappedConfigCollectionFactory
      */
     public function __construct(
-        Csv $csv, ConfigFactory $configFactory,
-        ConfigKeyGenerator $configKeyGenerator,
+        Csv $csv,
+        ConfigFactory $configFactory,
         RequiredColumnsValidator $requiredColumnsValidator,
         MappedConfigCollectionFactory $mappedConfigCollectionFactory
     ) {
         $this->csv = $csv;
         $this->configFactory = $configFactory;
-        $this->configKeyGenerator = $configKeyGenerator;
         $this->requiredColumnsValidator = $requiredColumnsValidator;
         $this->mappedConfigCollection = $mappedConfigCollectionFactory->create();
     }

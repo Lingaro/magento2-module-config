@@ -9,7 +9,7 @@ use Orba\Config\Helper\ConfigKeyGenerator;
 
 class MappedConfigCollection implements MappedConfigCollectionInterface
 {
-    private $mappedData;
+    private $mappedData = [];
 
     private $keyGenerator;
 
@@ -20,7 +20,7 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
 
     public function current()
     {
-        reset($this->mappedData);
+        return current($this->mappedData);
     }
 
     public function next()
@@ -40,7 +40,7 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
 
     public function rewind()
     {
-        // TODO: Implement rewind() method.
+        reset($this->mappedData);
     }
 
     public function offsetExists($offset)
@@ -75,14 +75,14 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
 
     public function getOriginalData(): array
     {
-        return $this->mappedData;
+        return $this->mappedData ?? [];
     }
 
     /**
      * @param MappedConfigCollectionInterface[] ...$otherCollections
      * @return MappedConfigCollectionInterface
      */
-    public function mergeOtherCollections(...$otherCollections): MappedConfigCollectionInterface {
+    public function mergeOtherCollections(MappedConfigCollectionInterface ...$otherCollections): MappedConfigCollectionInterface {
         $otherDatas = array_map(
             function (MappedConfigCollectionInterface $collection): array {
                 return $collection->getOriginalData();

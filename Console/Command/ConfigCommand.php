@@ -15,6 +15,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Console\Cli;
+use Orba\Config\Model\Config\ConfigRepository;
+use Orba\Config\Model\Config\ConfigAnalyzer;
+use Orba\Config\Model\Config\ConfigProcessor;
+
+use Magento\Framework\App\Cache\Manager as CacheManager;
+use Magento\Framework\App\Config\ReinitableConfigInterface;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 
 class ConfigCommand extends Command
 {
@@ -31,22 +38,60 @@ class ConfigCommand extends Command
 
     /** @var MultiReader */
     private $csvReader;
+
+    /** @var ConfigRepository */
     private $configRepository;
+
+    /** @var ConfigAnalyzer */
+    private $configAnalyzer;
+
+    /** @var ConfigProcessor */
+    private $configProcessor;
+
+    /** @var CacheManager */
+    private $cacheManager;
+
+    /** @var EventManagerInterface */
+    private $eventManager;
+
+    /** @var ReinitableConfigInterface */
+    private $reinitableConfig;
 
     /**
      * ConfigCommand constructor.
      * @param State $appState
      * @param MultiReader $csvReader
+     * @param ConfigRepository $configRepository
+     * @param ConfigAnalyzer $configAnalyzer
+     * @param ConfigProcessor $configProcessor
+     * @param CacheManager $cacheManager
+     * @param EventManagerInterface $eventManager
+     * @param ReinitableConfigInterface $reinitableConfig
      * @param string|null $name
      */
-    public function __construct(State $appState, MultiReader $csvReader, \Orba\Config\Model\Config\ConfigRepository $configRepository, ?string $name = null)
-    {
+    public function __construct(
+        State $appState,
+        MultiReader $csvReader,
+        ConfigRepository $configRepository,
+        ConfigAnalyzer $configAnalyzer,
+        ConfigProcessor $configProcessor,
+        CacheManager $cacheManager,
+        EventManagerInterface $eventManager,
+        ReinitableConfigInterface $reinitableConfig,
+        ?string $name = null
+    ) {
         parent::__construct($name);
         $this->appState = $appState;
         $this->csvReader = $csvReader;
         $this->configRepository = $configRepository;
+        $this->configAnalyzer = $configAnalyzer;
+        $this->configProcessor = $configProcessor;
+        $this->cacheManager = $cacheManager;
+        $this->reinitableConfig = $reinitableConfig;
+        $this->eventManager = $eventManager;
     }
 
+    /** @inheritDoc */
     protected function configure()
     {
         $this->setName(self::COMMAND_NAME)
@@ -60,7 +105,7 @@ class ConfigCommand extends Command
             ->addOption(
                 self::OPTION_DRY_RUN,
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'Set the option to get more details about result'
             )
             ->addArgument(
@@ -89,6 +134,12 @@ class ConfigCommand extends Command
                 $input->getOption(self::OPTION_ENV)
             );
             $dbConfigs = $this->configRepository->getAllConfigs();
+            $operationsRegistry = $this->configAnalyzer->prepareConfigCollection($dbConfigs, $csvConfigs);
+
+            if (!$input->getOption(self::OPTION_DRY_RUN)) {
+                $this->configProcessor->process($operationsRegistry);
+                $this->refreshCache();
+            }
         } catch (\Exception $e) {
             $output->writeln('<error>'. $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;
@@ -96,5 +147,13 @@ class ConfigCommand extends Command
 
         $output->writeln('<info>'. 'Configuration has been updated successfully' . '</info>');
         return CLI::RETURN_SUCCESS;
+    }
+
+    private function refreshCache() : void
+    {
+        $this->eventManager->dispatch('adminhtml_cache_flush_all');
+        $types = $this->cacheManager->getAvailableTypes();
+        $this->cacheManager->flush($types);
+        $this->reinitableConfig->reinit();
     }
 }

@@ -10,6 +10,7 @@ use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Config\Validator\ValidatorInterface;
 use Orba\Config\Model\Csv\Config\Value\ValueParser;
+use Orba\Config\Helper\ScopeMap;
 
 class ConfigFactory
 {
@@ -22,16 +23,25 @@ class ConfigFactory
     /** @var ValidatorInterface[] */
     private $configValidators;
 
+    /** @var ScopeMap */
+    private $scopeMap;
+
     /**
      * ConfigFactory constructor.
      * @param ValueParser $valueParser
      * @param ValueGetter $valueGetter
-     * @param ValidatorInterface[] $configValidators
+     * @param ScopeMap $scopeMap
+     * @param array $configValidators
      */
-    public function __construct(ValueParser $valueParser, ValueGetter $valueGetter, array $configValidators)
-    {
+    public function __construct(
+        ValueParser $valueParser,
+        ValueGetter $valueGetter,
+        ScopeMap $scopeMap,
+        array $configValidators
+    ) {
         $this->valueParser = $valueParser;
         $this->valueGetter = $valueGetter;
+        $this->scopeMap = $scopeMap;
         $this->configValidators = $configValidators;
     }
 
@@ -59,6 +69,11 @@ class ConfigFactory
         $data[Config::FIELD_VALUE] = $this->valueGetter->getValueWithBackendModel(
             $data[Config::FIELD_PATH],
             $data[Config::FIELD_VALUE]
+        );
+
+        $data[Config::FIELD_SCOPE_ID] = $this->scopeMap->getIdByScopeAndCode(
+            $data[Config::FIELD_SCOPE],
+            $data[Config::FIELD_CODE] ?? ''
         );
 
         return new Config($data);

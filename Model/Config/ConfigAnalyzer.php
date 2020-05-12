@@ -2,6 +2,7 @@
 
 namespace Orba\Config\Model\Config;
 
+use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Api\MappedConfigCollectionInterface;
 use Orba\Config\Helper\ConfigKeyGenerator;
 use Orba\Config\Model\Csv\Config;
@@ -19,12 +20,6 @@ class ConfigAnalyzer
     /** @var ConfigKeyGenerator */
     private $configKeyGenerator;
 
-    /** @var MappedConfigCollectionInterface */
-    private $databaseConfigs;
-
-    /** @var MappedConfigCollectionInterface */
-    private $fileConfigs;
-
     /**
      * ConfigProcessor constructor.
      * @param OperationsRegistryFactory $operationsRegistryFactory
@@ -36,22 +31,21 @@ class ConfigAnalyzer
     public function __construct(
         OperationsRegistryFactory $operationsRegistryFactory,
         ConfigFactory $configFactory,
-        ConfigKeyGenerator $configKeyGenerator,
-        MappedConfigCollectionInterface $databaseConfigs,
-        MappedConfigCollectionInterface $fileConfigs
+        ConfigKeyGenerator $configKeyGenerator
     ) {
         $this->operationsRegistryFactory = $operationsRegistryFactory;
         $this->configFactory = $configFactory;
         $this->configKeyGenerator = $configKeyGenerator;
-        $this->databaseConfigs = $databaseConfigs;
-        $this->fileConfigs = $fileConfigs;
     }
 
-    public function prepareConfigCollection(): OperationsRegistry
+    public function prepareConfigCollection(
+        MappedConfigCollectionInterface $databaseConfigs,
+        MappedConfigCollectionInterface $fileConfigs
+    ): OperationsRegistry
     {
         /** @var OperationsRegistry $operationsRegistry */
         $operationsRegistry = $this->operationsRegistryFactory->create();
-        foreach ($this->fileConfigs as $fileConfig) {
+        foreach ($fileConfigs as $fileConfig) {
             switch ($fileConfig->getState()) {
                 // skip this config
                 case Config::STATE_IGNORED:
@@ -59,7 +53,7 @@ class ConfigAnalyzer
                     break;
                 // saved only when no config already exist in db
                 case Config::STATE_INIT:
-                    if ($this->databaseConfigs->has($fileConfig)) {
+                    if ($databaseConfigs->has($fileConfig)) {
                         $operationsRegistry->addIgnored($fileConfig);
                     } else {
                         $operationsRegistry->addToAdd($fileConfig);
@@ -67,16 +61,17 @@ class ConfigAnalyzer
                     break;
                 // update value only once - when is different in db
                 case Config::STATE_ONCE:
-                    if ($this->databaseConfigs->has($fileConfig)) {
-                        $databaseValue = $this->databaseConfigs->getFromCollection($fileConfig)->getValue();
+                    if ($databaseConfigs->has($fileConfig)) {
+                        $databaseValue = $databaseConfigs->getFromCollection($fileConfig)->getValue();
                         if ($databaseValue ===  $fileConfig->getValue()) {
                             $operationsRegistry->addIgnored($fileConfig);
                         } else {
+                            /** @var ConfigInterface $newConfig */
                             $newConfig = $this->configFactory->create(
                                 $fileConfig
                             );
                             $operationsRegistry->addToUpdate(
-                                $this->databaseConfigs->getFromCollection($fileConfig),
+                                $databaseConfigs->getFromCollection($fileConfig),
                                 $newConfig
                             );
                         }
@@ -86,10 +81,10 @@ class ConfigAnalyzer
                     break;
                 // update value everytime
                 case Config::STATE_ALWAYS:
-                    if ($this->databaseConfigs->has($fileConfig)) {
+                    if ($databaseConfigs->has($fileConfig)) {
                         $operationsRegistry->addToUpdate(
                             $fileConfig,
-                            $this->databaseConfigs->getFromCollection($fileConfig)
+                            $databaseConfigs->getFromCollection($fileConfig)
                         );
                     } else {
                         $operationsRegistry->addToAdd($fileConfig);
@@ -97,10 +92,10 @@ class ConfigAnalyzer
                     break;
                 // remove config if exists
                 case Config::STATE_ABSENT:
-                    if ($this->databaseConfigs->has($fileConfig)) {
+                    if ($databaseConfigs->has($fileConfig)) {
                         $operationsRegistry->addToRemove(
                             $fileConfig,
-                            $this->databaseConfigs->getFromCollection($fileConfig)
+                            $databaseConfigs->getFromCollection($fileConfig)
                         );
                     } else {
                         $operationsRegistry->addIgnored($fileConfig);

@@ -8,7 +8,7 @@ use Iterator;
 
 interface MappedConfigCollectionInterface extends ArrayAccess, Countable, Iterator
 {
-    public function mergeOtherCollections(MappedConfigCollectionInterface $otherCollection): MappedConfigCollectionInterface;
+    public function mergeOtherCollections(MappedConfigCollectionInterface ...$otherCollections): MappedConfigCollectionInterface;
     public function getOriginalData(): array;
     public function has(ConfigInterface $config): bool;
     public function getFromCollection(ConfigInterface $config): ?ConfigInterface;

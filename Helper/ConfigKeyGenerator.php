@@ -15,6 +15,13 @@ class ConfigKeyGenerator
      */
     public function generateKey(ConfigInterface $config): string
     {
-        return $config->getPath() . $config->getScopeType() . $config->getScopeCode();
+        return implode(
+            '|',
+            [
+                $config->getPath(),
+                $config->getScopeType(),
+                $config->getScopeId()
+            ]
+        );
     }
 }

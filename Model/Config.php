@@ -53,4 +53,20 @@ class Config extends ParentConfig implements ConfigInterface
     {
         return $this->getData('value');
     }
+
+    /**
+     * @return int|null
+     */
+    public function getScopeId(): ?int
+    {
+        return $this->getData('scope_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllData() : array
+    {
+        return $this->getData();
+    }
 }

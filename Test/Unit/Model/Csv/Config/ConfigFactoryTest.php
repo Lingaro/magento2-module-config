@@ -101,18 +101,21 @@ class ConfigFactoryTest extends BaseTestCase
             'line with default value' => [
                 [
                     Config::FIELD_PATH,
+                    Config::FIELD_SCOPE,
                     Config::FIELD_STATE,
                     Config::FIELD_VALUE
                 ],
                 [
                     'value1',
                     'value2',
-                    'value3'
+                    'value3',
+                    'value4'
                 ],
                 [
                     Config::FIELD_PATH => 'value1',
-                    Config::FIELD_STATE => 'value2',
-                    Config::FIELD_VALUE => 'value3'
+                    Config::FIELD_SCOPE => 'value2',
+                    Config::FIELD_STATE => 'value3',
+                    Config::FIELD_VALUE => 'value4'
                 ],
                 Config::FIELD_VALUE,
                 null
@@ -120,6 +123,7 @@ class ConfigFactoryTest extends BaseTestCase
             'line with env value' => [
                 [
                     Config::FIELD_PATH,
+                    Config::FIELD_SCOPE,
                     Config::FIELD_STATE,
                     Config::FIELD_VALUE,
                     Config::FIELD_ENV_VALUE_PREFIX . 'env1'
@@ -129,12 +133,14 @@ class ConfigFactoryTest extends BaseTestCase
                     'value2',
                     'value3',
                     'value4',
+                    'value5',
                 ],
                 [
                     Config::FIELD_PATH => 'value1',
-                    Config::FIELD_STATE => 'value2',
-                    Config::FIELD_VALUE => 'value3',
-                    Config::FIELD_ENV_VALUE_PREFIX . 'env1' => 'value4'
+                    Config::FIELD_SCOPE => 'value2',
+                    Config::FIELD_STATE => 'value3',
+                    Config::FIELD_VALUE => 'value4',
+                    Config::FIELD_ENV_VALUE_PREFIX . 'env1' => 'value5'
                 ],
                 Config::FIELD_ENV_VALUE_PREFIX . 'env1',
                 'env1'

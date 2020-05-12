@@ -27,7 +27,7 @@ class RequiredFields implements ValidatorInterface
      */
     public function validate(array $data): void
     {
-        foreach ($this->requiredFields as $field) {
+        foreach ($this->requiredFields as $key => $field) {
             if (empty($data[$field])) {
                 throw new LocalizedException(
                     __('Column %1 can not be empty in config file', $field)

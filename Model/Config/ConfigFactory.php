@@ -39,6 +39,8 @@ class ConfigFactory
             case ScopeInterface::SCOPE_WEBSITES:
                 $config->setWebsite($csvConfig->getScopeCode());
                 break;
+            default:
+                $config->setScopeId(0);
         }
         return $config;
     }

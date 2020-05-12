@@ -26,6 +26,7 @@ class Config implements ConfigInterface
     public const FIELD_SCOPE = 'scope';
     public const FIELD_CODE = 'code';
     public const FIELD_STATE = 'state';
+    public const FIELD_SCOPE_ID = 'scope_id';
 
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
@@ -44,6 +45,9 @@ class Config implements ConfigInterface
     /** @var string */
     private $state;
 
+    /** @var int */
+    private $scopeId;
+
     /**
      * Config constructor.
      * @param array $data
@@ -55,6 +59,7 @@ class Config implements ConfigInterface
         $this->scope = empty($data[self::FIELD_SCOPE]) ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : $data[self::FIELD_SCOPE];
         $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];
+        $this->scopeId = $data[self::FIELD_SCOPE_ID] ?? null;
     }
 
     /**
@@ -97,5 +102,26 @@ class Config implements ConfigInterface
     public function getState(): ?string
     {
         return $this->state;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getScopeId(): ?int
+    {
+        return $this->scopeId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllData() : array
+    {
+        return [
+            'path' => $this->path,
+            'scope' => $this->scope,
+            'scope_id' => $this->scopeId,
+            'value' => $this->value
+        ];
     }
 }

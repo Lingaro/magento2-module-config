@@ -6,6 +6,8 @@ use Magento\Framework\TestFramework\Unit\BaseTestCase;
 use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\MultiReader;
 use PHPUnit\Framework\MockObject\MockObject;
+use Orba\Config\Model\MappedConfigCollection;
+use Orba\Config\Model\MappedConfigCollectionFactory;
 
 class MultiReaderTest extends BaseTestCase
 {
@@ -15,10 +17,24 @@ class MultiReaderTest extends BaseTestCase
     /** @var MultiReader */
     private $reader;
 
+    /** @var MappedConfigCollection|MockObject */
+    private $mappedConfigCollectionMock;
+
     protected function setUp()
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(MultiReader::class);
+
+        $mappedConfigCollectionFactoryMock = $this->arguments['mappedConfigCollectionFactory'];
+        $this->mappedConfigCollectionMock = $this
+            ->getMockBuilder(MappedConfigCollection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mappedConfigCollectionFactoryMock
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn($this->mappedConfigCollectionMock);
+
         $this->reader = $this->objectManager->getObject(MultiReader::class, $this->arguments);
     }
 
@@ -40,19 +56,16 @@ class MultiReaderTest extends BaseTestCase
             ]
         ];
         $paths = array_keys($content);
-        $this->arguments['reader']->expects($this->exactly(count($content)))
+        $this->arguments['reader']
+            ->expects($this->exactly(count($content)))
             ->method('readConfigFile')
-            ->withConsecutive(...array_map(function ($file) use ($env) {
-                return [$file, $env];
-            }, $paths))
-            ->willReturnOnConsecutiveCalls(...array_values($content));
+            ->willReturn($this->mappedConfigCollectionMock);
 
-        $expected = [
-            'key1' => $config4,
-            'key2' => $config2,
-            'key3' => $config3
-        ];
+        $this->mappedConfigCollectionMock
+            ->expects($this->any())
+            ->method('mergeOtherCollections')
+            ->willReturnSelf();
 
-        $this->assertSame($expected, $this->reader->readConfigFiles($paths, $env));
+        $this->assertSame($this->mappedConfigCollectionMock, $this->reader->readConfigFiles($paths, $env));
     }
 }

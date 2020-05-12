@@ -23,7 +23,7 @@ class ConfigChange
     /**
      * ConfigChange constructor.
      * @param ConfigInterface $oldConfig
-     * @param Config $newConfig
+     * @param ConfigInterface $newConfig
      */
     public function __construct(ConfigInterface $oldConfig, ConfigInterface $newConfig)
     {
@@ -40,9 +40,9 @@ class ConfigChange
     }
 
     /**
-     * @return Config
+     * @return ConfigInterface
      */
-    public function getNewConfig(): Config
+    public function getNewConfig(): ConfigInterface
     {
         return $this->newConfig;
     }

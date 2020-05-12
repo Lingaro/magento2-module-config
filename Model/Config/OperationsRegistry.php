@@ -40,6 +40,8 @@ class OperationsRegistry
     public function addToAdd(ConfigInterface $config): OperationsRegistry
     {
         $this->toAddConfigs[] = $config;
+
+        return $this;
     }
 
     /**
@@ -58,6 +60,8 @@ class OperationsRegistry
     public function addToUpdate(ConfigInterface $config, ConfigInterface $oldConfig): OperationsRegistry
     {
         $this->toUpdateConfigs[] = new ConfigChange($oldConfig, $config);
+
+        return $this;
     }
 
     /**
@@ -76,6 +80,8 @@ class OperationsRegistry
     public function addToRemove(ConfigInterface $config, ConfigInterface $oldConfig): OperationsRegistry
     {
         $this->toRemoveConfigs[] = new ConfigChange($oldConfig, $config);
+
+        return $this;
     }
 
     /**
@@ -93,6 +99,7 @@ class OperationsRegistry
     public function addIgnored(ConfigInterface $config): OperationsRegistry
     {
         $this->ignoredConfigs[] = $config;
+
         return $this;
     }
 

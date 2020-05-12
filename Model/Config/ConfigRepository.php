@@ -61,16 +61,18 @@ class ConfigRepository
      * @param ConfigInterface[] $configs
      * @throws Exception
      */
+    public function insertConfigs(array $configs): void
+    {
+        $this->configResourceModel->bulkInsert($configs);
+    }
+
+    /**
+     * @param ConfigInterface[] $configs
+     * @throws Exception
+     */
     public function updateConfigs(array $configs): void
     {
-        foreach ($configs as $config) {
-            if (!($config instanceof ConfigInterface)) {
-                throw new LocalizedException(
-                    __('Wrong config object was provided to repository for update')
-                );
-            }
-            $config->save();
-        }
+        $this->configResourceModel->bulkUpdate($configs);
     }
 
     /**
