@@ -83,7 +83,33 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="pgUtilsInstallConfig" xsi:type="object">Orba\Config\Console\Command\ConfigCommand</item>
+                <item name="pgUtilsInstallConfig" xsi:type="object">Orba\Config\Console\Command\ConfigCommand\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Orba\Config\Model\StateProcessorPool">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="always" xsi:type="array">
+                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Always</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="init" xsi:type="array">
+                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Init</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="ignored" xsi:type="array">
+                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Ignored</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="once" xsi:type="array">
+                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Once</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="absent" xsi:type="array">
+                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Absent</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
             </argument>
         </arguments>
     </type>

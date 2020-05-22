@@ -11,6 +11,7 @@ use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Config\Validator\ValidatorInterface;
 use Orba\Config\Model\Csv\Config\Value\ValueParser;
 use Orba\Config\Helper\ScopeMap;
+use Orba\Config\Model\Csv\Config\Hash;
 
 class ConfigFactory
 {
@@ -26,22 +27,28 @@ class ConfigFactory
     /** @var ScopeMap */
     private $scopeMap;
 
+    /** @var Hash */
+    private $hash;
+
     /**
      * ConfigFactory constructor.
      * @param ValueParser $valueParser
      * @param ValueGetter $valueGetter
      * @param ScopeMap $scopeMap
+     * @param Hash $hash
      * @param array $configValidators
      */
     public function __construct(
         ValueParser $valueParser,
         ValueGetter $valueGetter,
         ScopeMap $scopeMap,
+        Hash $hash,
         array $configValidators
     ) {
         $this->valueParser = $valueParser;
         $this->valueGetter = $valueGetter;
         $this->scopeMap = $scopeMap;
+        $this->hash = $hash;
         $this->configValidators = $configValidators;
     }
 
@@ -70,6 +77,8 @@ class ConfigFactory
             $data[Config::FIELD_PATH],
             $data[Config::FIELD_VALUE]
         );
+
+        $data[Config::FIELD_IMPORTED_VALUE_HASH] = $this->hash->generate($data[Config::FIELD_VALUE]);
 
         $data[Config::FIELD_SCOPE_ID] = $this->scopeMap->getIdByScopeAndCode(
             $data[Config::FIELD_SCOPE],

@@ -103,7 +103,7 @@ class Config extends AbstractDb
                 '(`main_table`.`scope` = `tmp_table`.`scope`)'
                 . 'AND (`main_table`.`scope_id` = `tmp_table`.`scope_id`)'
                 . 'AND (`main_table`.`path` = `tmp_table`.`path`)',
-                ['value']
+                ['value', 'imported_value_hash']
             );
         $query = $connection->updateFromSelect(
             $select,

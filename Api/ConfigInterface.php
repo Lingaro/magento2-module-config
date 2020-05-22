@@ -10,5 +10,6 @@ interface ConfigInterface
     public function getScopeType(): string;
     public function getScopeCode(): ?string;
     public function getScopeId(): ?int;
+    public function getimportedValueHash() : string;
     public function getAllData() : array;
 }

@@ -63,6 +63,14 @@ class Config extends ParentConfig implements ConfigInterface
     }
 
     /**
+     * @return string
+     */
+    public function getimportedValueHash(): string
+    {
+        return $this->getData('imported_value_hash') ?? '';
+    }
+
+    /**
      * @return array
      */
     public function getAllData() : array

@@ -27,6 +27,7 @@ class Config implements ConfigInterface
     public const FIELD_CODE = 'code';
     public const FIELD_STATE = 'state';
     public const FIELD_SCOPE_ID = 'scope_id';
+    public const FIELD_IMPORTED_VALUE_HASH = 'imported_value_hash';
 
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
@@ -48,6 +49,9 @@ class Config implements ConfigInterface
     /** @var int */
     private $scopeId;
 
+    /** @var string */
+    private $importedValueHash;
+
     /**
      * Config constructor.
      * @param array $data
@@ -60,6 +64,7 @@ class Config implements ConfigInterface
         $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];
         $this->scopeId = $data[self::FIELD_SCOPE_ID] ?? null;
+        $this->importedValueHash = $data[self::FIELD_IMPORTED_VALUE_HASH] ?? '';
     }
 
     /**
@@ -113,6 +118,14 @@ class Config implements ConfigInterface
     }
 
     /**
+     * @return string
+     */
+    public function getimportedValueHash() : string
+    {
+        return $this->importedValueHash;
+    }
+
+    /**
      * @return array
      */
     public function getAllData() : array
@@ -121,7 +134,8 @@ class Config implements ConfigInterface
             'path' => $this->path,
             'scope' => $this->scope,
             'scope_id' => $this->scopeId,
-            'value' => $this->value
+            'value' => $this->value,
+            'imported_value_hash' => $this->importedValueHash
         ];
     }
 }
