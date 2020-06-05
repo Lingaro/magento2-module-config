@@ -18,6 +18,7 @@ use Orba\Config\Console\Command\ConfigCommand;
 use Orba\Config\Model\Csv\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Orba\Config\Model\Config\ConfigRepository;
 
 /**
  * Class ConfigCommandTest
@@ -64,6 +65,9 @@ class ConfigCommandTest extends TestCase
      */
     private $storeManager;
 
+    /** @var ConfigRepository */
+    private $configRepository;
+
 
     /**
      * @inheritDoc
@@ -76,10 +80,10 @@ class ConfigCommandTest extends TestCase
         $this->command = $this->objectManager->get(ConfigCommand::class);
         $this->configWriter = $this->objectManager->get(WriterInterface::class);
         $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $this->configRepository = $this->objectManager->get(ConfigRepository::class);
         $this->tester = new CommandTester(
             $this->command
         );
-
     }
 
     public function testCommandReturnsErrorWhenNoFileSpecified()
@@ -155,74 +159,304 @@ class ConfigCommandTest extends TestCase
         $this->assertEquals(Cli::RETURN_SUCCESS, $this->tester->getStatusCode());
     }
 
+
+
+
     /**
+     * @dataProvider providerForTestCommandReturnsSuccessAndActsAccordingToState
+     * @param array $db
+     * @param array $csv
+     * @param array $expected
      * @throws FileSystemException
      */
-    public function testCommandReturnsSuccessSetSateAbsent()
+    public function testCommandReturnsSuccessAndActsAccordingToState(array $db, array $csv, array $expected)
     {
-        $expectedResults = [
-            'empty' => ['db_value' => null, 'value' => '1', 'expected' => null],
-            'exists' => ['db_value' => '2', 'value' => '3', 'expected' => null],
-            'next_set' => ['db_value' => '4', 'value' => '5', 'expected' => null]
-        ];
+        $this->setBaseConfig(
+            '',
+            $db['value'],
+            $db['imported_value_hash']
+        );
 
-        $this->runTestState($expectedResults, Config::STATE_ABSENT);
+        $csvData = $this->getDefaultCsvData($csv['state'], $csv['value']);
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile(
+                    self::DEFAULT_CSV_FILE_NAME,
+                    $csvData
+                )
+            ]
+        ]);
+
+        $this->assertEquals(
+            $expected['value'],
+            $this->scopeConfig->getValue(self::DEFAULT_CONFIG_PATH)
+        );
+
+        $dbConfig = $this->configRepository->get(
+            $csvData['row']['config_path'],
+            $csvData['row']['scope'],
+            $csvData['row']['code']
+        );
+        $actualHashInDb = $dbConfig->getimportedValueHash();
+
+        if (!$expected['imported_value_hash']) {
+            $this->assertEquals(
+                '',
+                $actualHashInDb,
+                sprintf(
+                    'expected no imported_value_hash, actual value in database is %s.'
+                    . ' This may mean that importer saved config although it was not necessary',
+                    $actualHashInDb
+                )
+            );
+        } else {
+            $expectedHash = sha1($expected['imported_value_hash']);
+            $this->assertEquals(
+                $expectedHash,
+                $actualHashInDb,
+                sprintf(
+                    'expected imported_value_hash is %s, actual value in database is %s.'
+                    . ' Importer is supposed to insert/update hash based on last imported value'
+                    . ', also when value in database is the same as value in csv but imported_value_hash is missing',
+                    $expectedHash,
+                    $actualHashInDb
+                )
+            );
+        }
     }
 
     /**
-     * @throws FileSystemException
+     * @return array[]
      */
-    public function testCommandReturnsSuccessSetSateIgnored()
+    public function providerForTestCommandReturnsSuccessAndActsAccordingToState() : array
     {
-        $expectedResults = [
-            'empty' => ['db_value' => null, 'value' => '1', 'expected' => null],
-            'exists' => ['db_value' => '2', 'value' => '3', 'expected' => '2'],
-            'next_set' => ['db_value' => '4', 'value' => '5', 'expected' => '4']
+        return [
+            'state=absent;db=empty' => [
+                'db' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '1',
+                    'state' => Config::STATE_ABSENT
+                ],
+                'expected' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=absent;db=exists_manual' => [
+                'db' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_ABSENT
+                ],
+                'expected' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=absent;db=exists_imported' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ],
+                'csv' => [
+                    'value' => '5',
+                    'state' => Config::STATE_ABSENT
+                ],
+                'expected' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=ignored;db=empty' => [
+                'db' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '1',
+                    'state' => Config::STATE_IGNORED
+                ],
+                'expected' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=ignored;db=exists_manual' => [
+                'db' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_IGNORED
+                ],
+                'expected' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=ignored;db=exists_imported' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ],
+                'csv' => [
+                    'value' => '5',
+                    'state' => Config::STATE_IGNORED
+                ],
+                'expected' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ]
+            ],
+            'state=always;db=empty' => [
+                'db' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '1',
+                    'state' => Config::STATE_ALWAYS
+                ],
+                'expected' => [
+                    'value' => '1',
+                    'imported_value_hash' => '1'
+                ]
+            ],
+            'state=always;db=exists_manual' => [
+                'db' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_ALWAYS
+                ],
+                'expected' => [
+                    'value' => '3',
+                    'imported_value_hash' => '3'
+                ]
+            ],
+            'state=always;db=exists_imported' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ],
+                'csv' => [
+                    'value' => '5',
+                    'state' => Config::STATE_ALWAYS
+                ],
+                'expected' => [
+                    'value' => '5',
+                    'imported_value_hash' => '5'
+                ]
+            ],
+            'state=init;db=empty' => [
+                'db' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '1',
+                    'state' => Config::STATE_INIT
+                ],
+                'expected' => [
+                    'value' => '1',
+                    'imported_value_hash' => '1'
+                ]
+            ],
+            'state=init;db=exists_manual' => [
+                'db' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_INIT
+                ],
+                'expected' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ]
+            ],
+            'state=init;db=exists_imported' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ],
+                'csv' => [
+                    'value' => '5',
+                    'state' => Config::STATE_INIT
+                ],
+                'expected' => [
+                    'value' => '4',
+                    'imported_value_hash' => '4'
+                ]
+            ],
+            'state=once;db=empty' => [
+                'db' => [
+                    'value' => null,
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '1',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => '1',
+                    'imported_value_hash' => '1'
+                ]
+            ],
+            'state=once;db=exists_manual' => [
+                'db' => [
+                    'value' => '2',
+                    'imported_value_hash' => null
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => '3',
+                    'imported_value_hash' => '3'
+                ]
+            ],
+            'state=once;db=exists_imported_and_manual;hash_different' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '3'
+                ],
+                'csv' => [
+                    'value' => '5',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => '5',
+                    'imported_value_hash' => '5'
+                ]
+            ],
+            'state=once;db=exists_imported_and_manual;hash_same' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '3'
+                ],
+                'csv' => [
+                    'value' => '3',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => '4',
+                    'imported_value_hash' => '3'
+                ]
+            ],
         ];
-
-        $this->runTestState($expectedResults, Config::STATE_IGNORED);
-    }
-
-    /**
-     * @throws FileSystemException
-     */
-    public function testCommandReturnsSuccessSetSateAlways()
-    {
-        $expectedResults = [
-            'empty' => ['db_value' => null, 'value' => '1', 'expected' => '1'],
-            'exists' => ['db_value' => '2', 'value' => '3', 'expected' => '3'],
-            'next_set' => ['db_value' => '4', 'value' => '5', 'expected' => '5']
-        ];
-
-        $this->runTestState($expectedResults, Config::STATE_ALWAYS);
-    }
-
-    /**
-     * @throws FileSystemException
-     */
-    public function testCommandReturnsSuccessSetSateInit()
-    {
-        $expectedResults = [
-            'empty' => ['db_value' => null, 'value' => '1', 'expected' => '1'],
-            'exists' => ['db_value' => '2', 'value' => '3', 'expected' => '2'],
-            'next_set' => ['db_value' => '4', 'value' => '5', 'expected' => '4']
-        ];
-
-        $this->runTestState($expectedResults, Config::STATE_INIT);
-    }
-
-    /**
-     * @throws FileSystemException
-     */
-    public function testCommandReturnsSuccessSetSateOnce()
-    {
-        $expectedResults = [
-            'empty' => ['db_value' => null, 'value' => '1', 'expected' => '1'],
-            'exists' => ['db_value' => '2', 'value' => '3', 'expected' => '3'],
-            'next_set' => ['db_value' => '4', 'value' => '5', 'expected' => '4']
-        ];
-
-        $this->runTestState($expectedResults, Config::STATE_ONCE);
     }
 
     /**
@@ -286,61 +520,31 @@ class ConfigCommandTest extends TestCase
     /**
      * @param $dbSate
      * @param $dbValue
+     * @param null $previousImportValue
      * @throws FileSystemException
      */
-    protected function setBaseConfig($dbSate, $dbValue): void
+    protected function setBaseConfig($dbSate, $dbValue, $previousImportValue = null): void
     {
         $this->configWriter->delete(self::DEFAULT_CONFIG_PATH);
-        if ($dbValue !== null) {
-            $this->setBaseConfigInDb($dbSate, $dbValue);
-        }
-    }
 
-    /**
-     * @param $dbSate
-     * @param $dbValue
-     * @throws FileSystemException
-     */
-    protected function setBaseConfigInDb($dbSate, $dbValue): void
-    {
-        if ($dbSate == 'next_set') {
+        if ($dbValue === null) {
+            return;
+        }
+
+        if ($previousImportValue) {
             $this->tester->execute([
                 'files' => [
                     $this->newCsvFile(self::DEFAULT_CSV_FILE_NAME,
-                        $this->getDefaultCsvData(Config::STATE_ALWAYS, $dbValue))
+                        $this->getDefaultCsvData(Config::STATE_ALWAYS, $previousImportValue))
                 ]
             ]);
-        } else {
-            $this->configWriter->save(self::DEFAULT_CONFIG_PATH, $dbValue,
-                ScopeConfigInterface::SCOPE_TYPE_DEFAULT);
         }
-    }
 
-    /**
-     * @param array $expectedResults
-     * @param string $state
-     * @throws FileSystemException
-     */
-    protected function runTestState(array $expectedResults, string $state): void
-    {
-        foreach ($expectedResults as $dbSate => $expectedResult) {
-
-            $this->setBaseConfig($dbSate, $expectedResult['db_value']);
-
-            $this->tester->execute([
-                'files' => [
-                    $this->newCsvFile(
-                        self::DEFAULT_CSV_FILE_NAME,
-                        $this->getDefaultCsvData($state, $expectedResults[$dbSate]['value'])
-                    )
-                ]
-            ]);
-
-            $this->assertEquals(
-                $expectedResults[$dbSate]['expected'],
-                $this->scopeConfig->getValue(self::DEFAULT_CONFIG_PATH)
-            );
-        }
+        $this->configWriter->save(
+            self::DEFAULT_CONFIG_PATH,
+            $dbValue,
+            ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+        );
     }
 
     /**
