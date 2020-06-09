@@ -2,6 +2,8 @@
 
 namespace Orba\Config\Test\Integration\Console\Command;
 
+use Magento\Backend\App\ConfigInterface;
+use Magento\Config\Model\Config\Backend\Encrypted;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -10,15 +12,16 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Filesystem;
+use Magento\Framework\Serialize\Serializer\Json as SerializerJson;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
 use Orba\Config\Console\Command\ConfigCommand;
+use Orba\Config\Model\Config\ConfigRepository;
 use Orba\Config\Model\Csv\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Orba\Config\Model\Config\ConfigRepository;
 
 /**
  * Class ConfigCommandTest
@@ -36,6 +39,14 @@ class ConfigCommandTest extends TestCase
     const DEFAULT_CONFIG_PATH = 'test/path';
 
     const DEFAULT_CSV_FILE_NAME = 'test.csv';
+
+    const DEFAULT_ENV_NAME = 'MYENV';
+
+    const DEFAULT_ENV_VALUE = 'my_env_value';
+
+    const CONFIG_ENCRYPTED_PATH = 'orba_config/config_test_group/encrypted';
+
+    const CONFIG_ARRAY_SERIALIZED_PATH = 'orba_config/config_test_group/array_serialized';
 
 
     /** @var ObjectManager */
@@ -67,6 +78,18 @@ class ConfigCommandTest extends TestCase
 
     /** @var ConfigRepository */
     private $configRepository;
+    /**
+     * @var Encrypted
+     */
+    private $encrypted;
+    /**
+     * @var SerializerJson
+     */
+    private $jsonSerializer;
+    /**
+     * @var ConfigInterface
+     */
+    private $backendConfig;
 
 
     /**
@@ -81,9 +104,15 @@ class ConfigCommandTest extends TestCase
         $this->configWriter = $this->objectManager->get(WriterInterface::class);
         $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
         $this->configRepository = $this->objectManager->get(ConfigRepository::class);
+        $this->encrypted = $this->objectManager->get(Encrypted::class);
         $this->tester = new CommandTester(
             $this->command
         );
+
+        $this->jsonSerializer = $this->objectManager->get(SerializerJson::class);
+        $this->backendConfig = $this->objectManager->get(ConfigInterface::class);
+
+        putenv(self::DEFAULT_ENV_NAME . "=" . self::DEFAULT_ENV_VALUE);
     }
 
     public function testCommandReturnsErrorWhenNoFileSpecified()
@@ -160,19 +189,17 @@ class ConfigCommandTest extends TestCase
     }
 
 
-
-
     /**
      * @dataProvider providerForTestCommandReturnsSuccessAndActsAccordingToState
      * @param array $db
      * @param array $csv
      * @param array $expected
      * @throws FileSystemException
+     * @throws NoSuchEntityException
      */
     public function testCommandReturnsSuccessAndActsAccordingToState(array $db, array $csv, array $expected)
     {
         $this->setBaseConfig(
-            '',
             $db['value'],
             $db['imported_value_hash']
         );
@@ -229,7 +256,7 @@ class ConfigCommandTest extends TestCase
     /**
      * @return array[]
      */
-    public function providerForTestCommandReturnsSuccessAndActsAccordingToState() : array
+    public function providerForTestCommandReturnsSuccessAndActsAccordingToState(): array
     {
         return [
             'state=absent;db=empty' => [
@@ -456,6 +483,34 @@ class ConfigCommandTest extends TestCase
                     'imported_value_hash' => '3'
                 ]
             ],
+            'state=once;db=exists_imported_and_manual;hash_same;ENV' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => self::DEFAULT_ENV_VALUE
+                ],
+                'csv' => [
+                    'value' => '{{env ' . self::DEFAULT_ENV_NAME . '}}',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => '4',
+                    'imported_value_hash' => self::DEFAULT_ENV_VALUE
+                ]
+            ],
+            'state=once;db=exists_imported_and_manual;hash_different;ENV' => [
+                'db' => [
+                    'value' => '4',
+                    'imported_value_hash' => '3'
+                ],
+                'csv' => [
+                    'value' => '{{env ' . self::DEFAULT_ENV_NAME . '}}',
+                    'state' => Config::STATE_ONCE
+                ],
+                'expected' => [
+                    'value' => self::DEFAULT_ENV_VALUE,
+                    'imported_value_hash' => self::DEFAULT_ENV_VALUE
+                ]
+            ],
         ];
     }
 
@@ -478,6 +533,158 @@ class ConfigCommandTest extends TestCase
     }
 
     /**
+     * @throws FileSystemException
+     */
+    public function testExpressionEnv()
+    {
+        $value = 'ble123';
+        putenv("MYENV=$value");
+        $configPath = 'expression/env';
+
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile('test.csv',
+                    $this->getDefaultCsvData(Config::STATE_ALWAYS, '{{env MYENV}}', $configPath)
+                )
+            ]
+        ]);
+
+        $this->assertEquals($value, $this->scopeConfig->getValue($configPath));
+    }
+
+
+    /**
+     * @throws FileSystemException
+     */
+    public function testExpressionFile()
+    {
+        $value = 'qwe1235';
+        $configPath = 'expression/file';
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile('test.csv',
+                    $this->getDefaultCsvData(Config::STATE_ALWAYS,
+                        '{{file ' . $this->newFile('secret.txt', $value) . '}}',
+                        $configPath
+                    )
+                )
+            ]
+        ]);
+
+        $this->assertEquals($value, $this->scopeConfig->getValue($configPath));
+    }
+
+    /**
+     * @throws FileSystemException
+     */
+    public function testExpressionNull()
+    {
+        $configPath = 'expression/null';
+
+        $dbValue = 'test123';
+        $this->configWriter->save(
+            $configPath,
+            $dbValue,
+            ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+        );
+
+        $this->assertEquals($dbValue, $this->scopeConfig->getValue($configPath));
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile('test.csv',
+                    $this->getDefaultCsvData(Config::STATE_ALWAYS,
+                        null,
+                        $configPath
+                    )
+                )
+            ]
+        ]);
+
+        $this->assertEquals(null, $this->scopeConfig->getValue($configPath));
+    }
+
+    /**
+     * @throws FileSystemException
+     */
+    public function testBackendModelEncrypted()
+    {
+        $encryptedConfigPath = self::CONFIG_ENCRYPTED_PATH;
+        $encryptedValue = 'encrypted_value';
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile('test.csv',
+                    $this->getDefaultCsvData(Config::STATE_ALWAYS,
+                        $encryptedValue,
+                        $encryptedConfigPath
+                    )
+                )
+            ]
+        ]);
+
+        $this->assertEquals($this->encrypted->processValue($this->scopeConfig->getValue($encryptedConfigPath)),
+            $encryptedValue);
+    }
+
+    public function testBackendModelArraySerialized()
+    {
+        $serializedConfigPath = self::CONFIG_ARRAY_SERIALIZED_PATH;
+        $valueArray = [
+            'data' => [
+                'aaa' => '1',
+                'bbb' => '2'
+            ],
+            'extra' => 'qwe123'
+        ];
+
+        $this->backendConfig->setValue(
+            self::DEFAULT_CONFIG_PATH,
+            $valueArray
+        );
+
+        $this->assertEquals(
+            $this->jsonSerializer->unserialize($this->scopeConfig->getValue($serializedConfigPath)),
+            $valueArray
+        );
+    }
+
+    /**
+     * @throws FileSystemException
+     */
+    public function testBackendModelArraySerializedSetJson()
+    {
+        $serializedConfigPath = self::CONFIG_ARRAY_SERIALIZED_PATH;
+        $valueArray = [
+            'data' => [
+                'aaa' => '5',
+                'bbb' => '6'
+            ],
+            'extra' => 'qwe123'
+        ];
+
+        $serializedValue = $this->jsonSerializer->serialize($valueArray);
+
+        $this->tester->execute([
+            'files' => [
+                $this->newCsvFile('test.csv',
+                    $this->getDefaultCsvData(Config::STATE_ALWAYS,
+                        $serializedValue,
+                        $serializedConfigPath
+                    )
+                )
+            ]
+        ]);
+
+        $this->assertEquals(
+            $this->jsonSerializer->unserialize($this->scopeConfig->getValue($serializedConfigPath)),
+            $valueArray
+        );
+    }
+
+    /**
      * @param string $csvFileName
      * @param array $csvData
      * @return string
@@ -493,15 +700,29 @@ class ConfigCommandTest extends TestCase
     }
 
     /**
+     * @param string $fileName
+     * @param string $data
+     * @return string
+     * @throws FileSystemException
+     */
+    protected function newFile(string $fileName, string $data): string
+    {
+        $varDirectory = $this->fileSystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $path = $varDirectory->getAbsolutePath($fileName);
+        $varDirectory->writeFile($fileName, $data);
+        return $path;
+    }
+
+    /**
      * @param string $state
-     * @param string $value
+     * @param $value
      * @param string $configPath
      * @param string $code
      * @return array[]
      */
     protected function getDefaultCsvData(
         string $state,
-        string $value = '1',
+        $value = '1',
         $configPath = self::DEFAULT_CONFIG_PATH,
         $code = ''
     ): array {
@@ -518,12 +739,11 @@ class ConfigCommandTest extends TestCase
     }
 
     /**
-     * @param $dbSate
      * @param $dbValue
      * @param null $previousImportValue
      * @throws FileSystemException
      */
-    protected function setBaseConfig($dbSate, $dbValue, $previousImportValue = null): void
+    protected function setBaseConfig($dbValue, $previousImportValue = null): void
     {
         $this->configWriter->delete(self::DEFAULT_CONFIG_PATH);
 

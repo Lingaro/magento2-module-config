@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="orba_config">
+            <group id="config_test_group" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="encrypted" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Encrypted</label>
+                    <config_path>orba_config/config_test_group/encrypted</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="array_serialized" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>ArraySerialized</label>
+                    <config_path>orba_config/config_test_group/array_serialized</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
