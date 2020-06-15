@@ -106,7 +106,7 @@ ENV expression allows you to set secret or environment-specific configuration us
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/general/private_key|default|{env RECAPTCHA_KEY}|1|always
+|msp_securitysuite_recaptcha/general/private_key|default| |{env RECAPTCHA_KEY}|always
 
 RECAPTCHA_KEY=passAbc123 bin/magento orba:config --files myConfiguration.csv
 
@@ -120,7 +120,7 @@ FILE expression allows you to set secret or environment-specific configuration u
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/general/private_key|default|{file .recaptcha_key}|1|always
+|msp_securitysuite_recaptcha/general/private_key|default| |{file .recaptcha_key}|always
 
 ```
 touch .recaptcha_key
@@ -135,25 +135,57 @@ NULL expression allows you to set configuration to null (when it is important to
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/backend/enabled|default|{null}|1|always
+|msp_securitysuite_recaptcha/backend/enabled|default| |{null}|always
+
+### Environment-specific values
+
+It is possible to define different values for different environments in the following way:
+
+|path|scope|code|value|value:dev|value:prod|state
+|---|---|---|---|---|---|---|
+|msp_securitysuite_recaptcha/backend/enabled|default| |0|1|2|always
+
+Based on parameters passed to orba:config command, the value saved in database will be as follows:
+
+|command|value|
+|---|---|
+|orba:config configuration.csv|0|
+|orba:config --env=dev configuration.csv|1|
+|orba:config --env=prod configuration.csv|2|
+
+Watchout: If you specify --env=dev, but value:dev is empty, the installer will not use default value. Empty value will be saved.
+
+E.g.
+
+When you run ```orba:config --env=dev configuration.csv``` with the following file:
+
+|path|scope|code|value|value:dev|state
+|---|---|---|---|---|---|
+|msp_securitysuite_recaptcha/backend/enabled|default| |1| |always
+
+The value saved in database will be empty string, not "1".
 
 ### Different environments
 
-If you need different configuration for you production, test and dev environments, you may use the following file structure:
+If you need different configuration for production, test and dev environments, use one or a combination of the following mechanisms:
 
-```
-/common.csv
-/prod.csv
-/uat.csv
-/dev.csv
-```
+1. CLI parameter --env + multiple environment-specific values in common.csv file (described in another section). In CI/CD process, make sure the command is run with different --env argument based on environment.
 
-The orba:config command allows you to specify multiple files - in such case, they are merged. In you CI/CD process, make sure the command is run with different arguments based on environment:
-- prod: orba:config --files common.csv prod.csv
-- uat: orba:config --files common.csv uat.csv
-- dev: orba:config --files common.csv dev.csv
+2. Multiple files, e.g.:
 
-You may also define all configuration in common.csv, but load values from environment using "ENV" expression.
+    ```
+    /common.csv
+    /prod.csv
+    /uat.csv
+    /dev.csv
+    ```
+    
+    The orba:config command allows you to specify multiple files - in such case, they are merged. In CI/CD process, make sure the command is run with different arguments based on environment:
+    - prod: orba:config --files common.csv prod.csv
+    - uat: orba:config --files common.csv uat.csv
+    - dev: orba:config --files common.csv dev.csv
+
+3. You may also define all configuration in common.csv, but load values from environment using "ENV" expression.
 
 ### Csv - database discrepancies
 

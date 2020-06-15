@@ -86,10 +86,6 @@ class ConfigCommandTest extends TestCase
      * @var SerializerJson
      */
     private $jsonSerializer;
-    /**
-     * @var ConfigInterface
-     */
-    private $backendConfig;
 
 
     /**
@@ -110,7 +106,6 @@ class ConfigCommandTest extends TestCase
         );
 
         $this->jsonSerializer = $this->objectManager->get(SerializerJson::class);
-        $this->backendConfig = $this->objectManager->get(ConfigInterface::class);
 
         putenv(self::DEFAULT_ENV_NAME . "=" . self::DEFAULT_ENV_VALUE);
     }
@@ -629,28 +624,6 @@ class ConfigCommandTest extends TestCase
             $encryptedValue);
     }
 
-    public function testBackendModelArraySerialized()
-    {
-        $serializedConfigPath = self::CONFIG_ARRAY_SERIALIZED_PATH;
-        $valueArray = [
-            'data' => [
-                'aaa' => '1',
-                'bbb' => '2'
-            ],
-            'extra' => 'qwe123'
-        ];
-
-        $this->backendConfig->setValue(
-            self::DEFAULT_CONFIG_PATH,
-            $valueArray
-        );
-
-        $this->assertEquals(
-            $this->jsonSerializer->unserialize($this->scopeConfig->getValue($serializedConfigPath)),
-            $valueArray
-        );
-    }
-
     /**
      * @throws FileSystemException
      */
@@ -682,6 +655,58 @@ class ConfigCommandTest extends TestCase
             $this->jsonSerializer->unserialize($this->scopeConfig->getValue($serializedConfigPath)),
             $valueArray
         );
+    }
+
+    /**
+     * @dataProvider providerForTestCommandUsesCsvEnvValueWhenEnvProvidedInCommandLine
+     * @param string|null $env
+     * @param string $expectedValue
+     * @throws FileSystemException
+     */
+    public function testCommandUsesCsvEnvValueWhenEnvProvidedInCommandLine(?string $env, string $expectedValue)
+    {
+        $csv = [
+            'header' => array_merge(self::CSV_HEADERS, ['value:dev', 'value:prod']),
+            'row' => [
+                'config_path' => self::DEFAULT_CONFIG_PATH,
+                'scope' => ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+                'code' => '',
+                'value' => 'defaultValue',
+                'state' => 'always',
+                'value:dev' => 'devValue',
+                'value:prod' => 'prodValue'
+            ]
+        ];
+
+        $this->tester->execute([
+            '--env' => $env,
+            'files' => [
+                $this->newCsvFile('test.csv', $csv)
+            ]
+        ]);
+
+        $this->assertEquals($expectedValue, $this->scopeConfig->getValue(self::DEFAULT_CONFIG_PATH));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerForTestCommandUsesCsvEnvValueWhenEnvProvidedInCommandLine() : array
+    {
+        return [
+            'env=null' => [
+                'env' => null,
+                'expectedVaue' => 'defaultValue'
+            ],
+            'env=dev' => [
+                'env' => 'dev',
+                'expectedVaue' => 'devValue'
+            ],
+            'env=prod' => [
+                'env' => 'prod',
+                'expectedVaue' => 'prodValue'
+            ],
+        ];
     }
 
     /**
