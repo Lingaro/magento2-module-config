@@ -17,6 +17,9 @@ class OperationsRegistry
     private $toUpdateConfigs;
 
     /** @var ConfigChange[] */
+    private $toUpdateHashConfigs;
+
+    /** @var ConfigChange[] */
     private $toRemoveConfigs;
 
     /** @var ConfigInterface[] */
@@ -29,6 +32,7 @@ class OperationsRegistry
     {
         $this->toAddConfigs = [];
         $this->toUpdateConfigs = [];
+        $this->toUpdateHashConfigs = [];
         $this->toRemoveConfigs = [];
         $this->ignoredConfigs = [];
     }
@@ -70,6 +74,26 @@ class OperationsRegistry
     public function getToUpdateConfigs(): array
     {
         return $this->toUpdateConfigs;
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @param ConfigInterface $oldConfig
+     * @return OperationsRegistry
+     */
+    public function addToUpdateHash(ConfigInterface $config, ConfigInterface $oldConfig): OperationsRegistry
+    {
+        $this->toUpdateConfigs[] = new ConfigChange($oldConfig, $config);
+
+        return $this;
+    }
+
+    /**
+     * @return ConfigChange[]
+     */
+    public function getToUpdateHashConfigs(): array
+    {
+        return $this->toUpdateHashConfigs;
     }
 
     /**

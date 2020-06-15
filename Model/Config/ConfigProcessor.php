@@ -32,7 +32,7 @@ class ConfigProcessor
             function (ConfigChange $configChange): ConfigInterface {
                 return $configChange->getNewConfig();
             },
-            $operationsRegistry->getToUpdateConfigs()
+            array_merge($operationsRegistry->getToUpdateConfigs(), $operationsRegistry->getToUpdateHashConfigs())
         );
         $this->configRepository->updateConfigs($configsToUpdate);
         $configsToRemove = array_map(

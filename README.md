@@ -8,7 +8,7 @@ This module allows to manage Magento configuration (core_config_data) using csv 
 
     |path|scope|code|value|state
     |---|---|---|---|---|
-    |msp_securitysuite_recaptcha/backend/enabled|store|italy|1|always
+    |msp_securitysuite_recaptcha/backend/enabled|stores|italy|1|always
 
 2. Keep it anywhere you want, preferably in git repository of your Magento project.
 
@@ -16,7 +16,7 @@ This module allows to manage Magento configuration (core_config_data) using csv 
 
     ``` bin/magento orba:config --files myConfiguration.csv ```
     
-The command clears all cache automatically, so changes should be immediately visible.
+The command clears all caches automatically, so changes should be immediately visible.
 
 ### Csv format
 
@@ -24,24 +24,24 @@ CSV requirements:
 - value separator: comma
 - encoding: UTF-8 without BOM
 - header row with column names is required
-- the following columns are required: path, scope, code, value, state
+- the following columns are required: path, scope, code, value (or `value:<env>`, see below), state
 
 Be careful about saving the file in Windows. File may be saved with semicolon as value separator and with Windows encoding due to user preferences.
 
 ### Scope and code
 
-Possible scopes are: default, website and store. If you leave the scope field empty, default scope is used.
+Possible scopes are: default, websites and stores. If you leave the scope field empty, default scope is used.
 
 Scope code needs to be:
-- website code - for scope website
-- store code - for scope store
+- website code - for scope websites
+- store code - for scope stores
 - <empty_string> - for scope default
 
 |path|scope|code|value|state
 |---|---|---|---|---|
 |msp_securitysuite_recaptcha/backend/enabled|default| |1|always
 |msp_securitysuite_recaptcha/backend/enabled|websites|b2c|1|always
-|msp_securitysuite_recaptcha/backend/enabled|store|italy|1|always
+|msp_securitysuite_recaptcha/backend/enabled|stores|italy|1|always
 
 ### State
 
@@ -57,7 +57,7 @@ Support for additional states may be added using di.xml.
 
 #### Always
 
-Import the config from csv to db (no matter if config exists in db or not).
+Import the config from csv to db (update if it exists in db, insert if it does not).
 
 #### Absent
  
@@ -191,28 +191,62 @@ If you need different configuration for production, test and dev environments, u
 
 If you make changes in your configuration.csv file, make sure you mark the config as "absent" instead of removing it from csv file. If you just remove configuration from file, next import will leave database value intact and there will be a discrepancy between file and database.
 
-Also, for the same reason, if you need to change configuration scope, do not just edit scope in the existing config entry. Instead, add new entry from new scope and mark the old scope as "absent".
+Also, for the same reason, if you need to change configuration scope, do not just edit scope in the existing config entry. Instead, add new entry for new scope and mark the old scope as "absent".
 
 Example: this is your configuration file before changes:
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/backend/enabled|website|b2c|1|always
+|msp_securitysuite_recaptcha/backend/enabled|websites|b2c|1|always
 
 This is how your configuration file should look like after changing scope:
 
 |path|scope|code|value|state
 |---|---|---|---|---|
 |msp_securitysuite_recaptcha/backend/enabled|default| |1|always
-|msp_securitysuite_recaptcha/backend/enabled|website|b2c|1|absent
+|msp_securitysuite_recaptcha/backend/enabled|websites|b2c|1|absent
 
-Notice that this config may have a store scope value in database, set manually by admin user. This import tool will not remove this value. Consequently, it may appear that the import fails to import new value, because store value will obscure website or default value imported from csv file.
+Notice that this config may have a stores scope value in database, set manually by admin user. This import tool will not remove this value. Consequently, it may appear that the import fails to import new value, because store value will obscure website or default value imported from csv file.
 
 ### Command
 
-bin/magento orba:config --files file1.csv file2.csv [--env=dev] [--dry-run]
+bin/magento orba:config --files file1.csv file2.csv [--env=dev] [--dry-run] [-v]
 
 If you specify several files, they will be merged. Final value is taken from the last file in which the configuration appears, in this case: from file2.csv.
+
+### Command Output
+
+Command exits with code 0 in case of success and with code greater than 0 in case of error.
+
+In case of success, the command prints summary of changes, e.g.
+
+```
+Added: 1
+Updated: 0
+Updated Hash: 0
+Removed: 0
+Ignored: 0
+Total: 1
+```
+
+With increased verbosity (```bin/magento orba:config -v```), the command prints additionally the list of configs per operation, e.g.:
+
+```
+Added:
+analytics/subscription/enabled  stores  italy
+
+Updated:
+sales/msrp/enabled default
+
+Updated Hash:
+sales/msrp/enabled websites b2c
+```
+
+Updated Hash means config in csv had the same value as config in database, but imported_value_hash was missing in database, so update was necessary.
+
+Imported value hash is used to mark the config as imported using Orba_Config import.
+
+You may run the command with --dry-run and increased verbosity to check how the import will affect database.
 
 ## Installation
 

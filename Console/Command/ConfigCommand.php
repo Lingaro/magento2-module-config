@@ -8,6 +8,7 @@ namespace Orba\Config\Console\Command;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
+use Orba\Config\Model\Config\OperationsRegistry;
 use Orba\Config\Model\Csv\MultiReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,11 +19,14 @@ use Magento\Framework\Console\Cli;
 use Orba\Config\Model\Config\ConfigRepository;
 use Orba\Config\Model\Config\ConfigAnalyzer;
 use Orba\Config\Model\Config\ConfigProcessor;
-
+use Orba\Config\Model\Config\ConfigSummary;
 use Magento\Framework\App\Cache\Manager as CacheManager;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 
+/**
+ * Class ConfigCommand
+ */
 class ConfigCommand extends Command
 {
     public const COMMAND_NAME = 'orba:config';
@@ -57,6 +61,9 @@ class ConfigCommand extends Command
     /** @var ReinitableConfigInterface */
     private $reinitableConfig;
 
+    /** @var ConfigSummary */
+    private $configSummary;
+
     /**
      * ConfigCommand constructor.
      * @param State $appState
@@ -78,6 +85,7 @@ class ConfigCommand extends Command
         CacheManager $cacheManager,
         EventManagerInterface $eventManager,
         ReinitableConfigInterface $reinitableConfig,
+        ConfigSummary $configSummary,
         ?string $name = null
     ) {
         parent::__construct($name);
@@ -89,6 +97,7 @@ class ConfigCommand extends Command
         $this->cacheManager = $cacheManager;
         $this->reinitableConfig = $reinitableConfig;
         $this->eventManager = $eventManager;
+        $this->configSummary = $configSummary;
     }
 
     /** @inheritDoc */
@@ -140,6 +149,7 @@ class ConfigCommand extends Command
                 $this->configProcessor->process($operationsRegistry);
                 $this->refreshCache();
             }
+            $this->printSummary($output, $operationsRegistry);
         } catch (\Exception $e) {
             $output->writeln('<error>'. $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;
@@ -149,6 +159,38 @@ class ConfigCommand extends Command
         return CLI::RETURN_SUCCESS;
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param OperationsRegistry $operationsRegistry
+     */
+    private function printSummary(OutputInterface $output, OperationsRegistry $operationsRegistry) : void
+    {
+        foreach ($this->configSummary->getTotals($operationsRegistry) as $key => $count) {
+            $output->writeln(sprintf(
+                '<info>%s: %d</info>',
+                $key,
+                $count
+            ));
+        }
+
+        if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+            foreach ($this->configSummary->getList($operationsRegistry) as $key => $configs) {
+                if (empty($configs)) {
+                    continue;
+                }
+                $output->writeln('');
+                $output->writeln(sprintf('<info>%s:</info>', $key));
+                foreach ($configs as $config) {
+                    $output->writeln(sprintf('<info>%s</info>', $config));
+                }
+            }
+            $output->writeln('');
+        }
+    }
+
+    /**
+     * Refresh cache
+     */
     private function refreshCache() : void
     {
         $this->eventManager->dispatch('adminhtml_cache_flush_all');

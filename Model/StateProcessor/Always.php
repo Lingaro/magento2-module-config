@@ -29,15 +29,25 @@ class Always implements StateProcessorInterface
         }
 
         $databaseConfig = $databaseConfigs->getFromCollection($fileConfig);
-        if ($databaseConfig->getimportedValueHash() && $databaseConfig->getValue() === $fileConfig->getValue()) {
-            $operationsRegistry->addIgnored($fileConfig);
+
+        if ($databaseConfig->getValue() !== $fileConfig->getValue()) {
+            $operationsRegistry->addToUpdate(
+                $fileConfig,
+                $databaseConfig
+            );
 
             return;
         }
 
-        $operationsRegistry->addToUpdate(
-            $fileConfig,
-            $databaseConfig
-        );
+        if ($databaseConfig->getValue() === $fileConfig->getValue() && !$databaseConfig->getimportedValueHash()) {
+            $operationsRegistry->addToUpdateHash(
+                $fileConfig,
+                $databaseConfig
+            );
+
+            return;
+        }
+
+        $operationsRegistry->addIgnored($fileConfig);
     }
 }
