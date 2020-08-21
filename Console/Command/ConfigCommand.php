@@ -8,6 +8,7 @@ namespace Orba\Config\Console\Command;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\ObjectManagerInterface;
 use Orba\Config\Model\Config\OperationsRegistry;
 use Orba\Config\Model\Csv\MultiReader;
 use Symfony\Component\Console\Command\Command;
@@ -65,39 +66,36 @@ class ConfigCommand extends Command
     private $configSummary;
 
     /**
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+
+    /**
      * ConfigCommand constructor.
-     * @param State $appState
-     * @param MultiReader $csvReader
-     * @param ConfigRepository $configRepository
      * @param ConfigAnalyzer $configAnalyzer
-     * @param ConfigProcessor $configProcessor
      * @param CacheManager $cacheManager
      * @param EventManagerInterface $eventManager
      * @param ReinitableConfigInterface $reinitableConfig
+     * @param ConfigSummary $configSummary
+     * @param ObjectManagerInterface $objectManager
      * @param string|null $name
      */
     public function __construct(
-        State $appState,
-        MultiReader $csvReader,
-        ConfigRepository $configRepository,
         ConfigAnalyzer $configAnalyzer,
-        ConfigProcessor $configProcessor,
         CacheManager $cacheManager,
         EventManagerInterface $eventManager,
         ReinitableConfigInterface $reinitableConfig,
         ConfigSummary $configSummary,
+        ObjectManagerInterface $objectManager,
         ?string $name = null
     ) {
         parent::__construct($name);
-        $this->appState = $appState;
-        $this->csvReader = $csvReader;
-        $this->configRepository = $configRepository;
         $this->configAnalyzer = $configAnalyzer;
-        $this->configProcessor = $configProcessor;
         $this->cacheManager = $cacheManager;
         $this->reinitableConfig = $reinitableConfig;
         $this->eventManager = $eventManager;
         $this->configSummary = $configSummary;
+        $this->objectManager = $objectManager;
     }
 
     /** @inheritDoc */
@@ -132,6 +130,17 @@ class ConfigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
+            /* we need to add those classes to objectManager bacuse of issue with integration tests like this:
+            magento-integration_1  |   [Magento\Framework\Setup\Exception]
+            magento-integration_1  |   Unable to apply patch Magento\InventorySales\Setup\Patch\Schema\InitializeW
+            magento-integration_1  |   ebsiteDefaultSock for module Magento_InventorySales. Original exception mes
+            magento-integration_1  |   sage: The default website isn't defined. Set the website and try again.
+            */
+            $this->appState = $this->objectManager->get(State::class);
+            $this->csvReader = $this->objectManager->get(MultiReader::class);
+            $this->configRepository = $this->objectManager->get(ConfigRepository::class);
+            $this->configProcessor = $this->objectManager->get(ConfigProcessor::class);
+
             // Set setup code go in setup mode
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
             $files = $input->getArgument(self::ARGUMENT_FILES);
