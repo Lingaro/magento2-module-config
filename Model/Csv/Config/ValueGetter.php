@@ -88,6 +88,6 @@ class ValueGetter
         $methodName = self::MODEL_PARSE_METHOD;
         $backendModel->$methodName();
 
-        return $backendModel->getValue();
+        return (string)$backendModel->getValue();
     }
 }
