@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Test\Unit\Helper;
 
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
@@ -15,7 +17,7 @@ class ConfigKeyGeneratorTest extends BaseTestCase
     /** @var ConfigKeyGenerator */
     private $generator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->generator = $this->objectManager->getObject(ConfigKeyGenerator::class);

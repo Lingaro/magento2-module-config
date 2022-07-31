@@ -1,7 +1,12 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
+
 namespace Orba\Config\Model;
 
-use Orba\Config\Model\StateProcessorInterface;
 use Exception;
 use Magento\Framework\ObjectManagerInterface;
 
@@ -14,10 +19,10 @@ class StateProcessorPool
     public const CONFIG_FIELD_DISABLE = 'disable';
 
     /** @var ObjectManagerInterface */
-    protected $objectManager;
+    protected ObjectManagerInterface $objectManager;
 
     /** @var StateProcessorInterface[] $processors */
-    protected $processors = [];
+    protected array $processors = [];
 
     /**
      * StateProcessorPool constructor.

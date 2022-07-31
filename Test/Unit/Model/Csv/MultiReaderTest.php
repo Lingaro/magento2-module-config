@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv;
 
@@ -12,15 +17,15 @@ use Orba\Config\Model\MappedConfigCollectionFactory;
 class MultiReaderTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var MultiReader */
-    private $reader;
+    private MultiReader $reader;
 
     /** @var MappedConfigCollection|MockObject */
-    private $mappedConfigCollectionMock;
+    private MockObject $mappedConfigCollectionMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(MultiReader::class);

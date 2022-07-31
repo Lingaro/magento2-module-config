@@ -1,4 +1,10 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
+
 namespace Orba\Config\Model;
 
 use Orba\Config\Model\Config\OperationsRegistry;

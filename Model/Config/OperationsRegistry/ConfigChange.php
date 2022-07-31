@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Config\OperationsRegistry;
 
 use Orba\Config\Api\ConfigInterface;
@@ -15,10 +17,10 @@ use Orba\Config\Api\ConfigInterface;
 class ConfigChange
 {
     /** @var ConfigInterface */
-    private $oldConfig;
+    private ConfigInterface $oldConfig;
 
     /** @var ConfigInterface */
-    private $newConfig;
+    private ConfigInterface $newConfig;
 
     /**
      * ConfigChange constructor.

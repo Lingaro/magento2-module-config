@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config;
 
@@ -13,18 +18,24 @@ use PHPUnit\Framework\MockObject\MockObject;
 class ValueGetterTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var ValueGetter */
-    private $valueGetter;
+    private ValueGetter $valueGetter;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(ValueGetter::class);
         $this->valueGetter = $this->objectManager->getObject(ValueGetter::class, $this->arguments);
     }
 
+    /**
+     * @return void
+     */
     public function testOriginalValueIsReturnedWhenFieldDoesntHaveBackendModel(): void
     {
         $path = 'path/to/config';
@@ -50,6 +61,9 @@ class ValueGetterTest extends BaseTestCase
         $this->assertEquals($value, $this->valueGetter->getValueWithBackendModel($path, $value));
     }
 
+    /**
+     * @return void
+     */
     public function testOriginalValueIsReturnedWhenBackendModelDoesntSupportParsing(): void
     {
         $path = 'path/to/config';
@@ -87,6 +101,9 @@ class ValueGetterTest extends BaseTestCase
         $this->assertEquals($value, $this->valueGetter->getValueWithBackendModel($path, $value));
     }
 
+    /**
+     * @return void
+     */
     public function testParsedValueIsReturnedWhenBackendModelCanParseIt(): void
     {
         $path = 'path/to/config';

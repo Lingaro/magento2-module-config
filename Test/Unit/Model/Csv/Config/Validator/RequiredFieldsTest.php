@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config\Validator;
 
@@ -20,7 +25,7 @@ class RequiredFieldsTest extends BaseTestCase
     /** @var RequiredFields */
     private $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(RequiredFields::class);
@@ -50,7 +55,7 @@ class RequiredFieldsTest extends BaseTestCase
         unset($data[self::REQUIRED_FIELDS[0]]);
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Column .* can not be empty in config file/');
+        $this->expectExceptionMessageMatches('/Column .* can not be empty in config file/');
 
         $this->validator->validate($data);
     }
@@ -66,7 +71,7 @@ class RequiredFieldsTest extends BaseTestCase
         $data[self::REQUIRED_FIELDS[0]] = '';
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Column .* can not be empty in config file/');
+        $this->expectExceptionMessageMatches('/Column .* can not be empty in config file/');
 
         $this->validator->validate($data);
     }

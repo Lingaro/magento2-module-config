@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Config;
 
 use Orba\Config\Api\ConfigInterface;
@@ -11,19 +13,19 @@ use Orba\Config\Model\Config\OperationsRegistry\ConfigChange;
 class OperationsRegistry
 {
     /** @var ConfigInterface[] */
-    private $toAddConfigs;
+    private array $toAddConfigs;
 
     /** @var ConfigChange[] */
-    private $toUpdateConfigs;
+    private array $toUpdateConfigs;
 
     /** @var ConfigChange[] */
-    private $toUpdateHashConfigs;
+    private array $toUpdateHashConfigs;
 
     /** @var ConfigChange[] */
-    private $toRemoveConfigs;
+    private array $toRemoveConfigs;
 
     /** @var ConfigInterface[] */
-    private $ignoredConfigs;
+    private array $ignoredConfigs;
 
     /**
      * ConfigCollection constructor.

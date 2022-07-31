@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config\Validator;
 
@@ -15,7 +20,7 @@ class PossibleValuesInColumnsTest extends BaseTestCase
     /** @var PossibleValuesInColumns */
     private $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(PossibleValuesInColumns::class);
@@ -74,7 +79,7 @@ class PossibleValuesInColumnsTest extends BaseTestCase
         $data['scope'] .= 's1';
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Column .* contains not allowed value/');
+        $this->expectExceptionMessageMatches('/Column .* contains not allowed value/');
 
         $this->validator->validate($data);
     }

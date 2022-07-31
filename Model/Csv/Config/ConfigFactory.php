@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -11,7 +13,6 @@ use Orba\Config\Model\Csv\Config;
 use Orba\Config\Model\Csv\Config\Validator\ValidatorInterface;
 use Orba\Config\Model\Csv\Config\Value\ValueParser;
 use Orba\Config\Helper\ScopeMap;
-use Orba\Config\Model\Csv\Config\Hash;
 
 class ConfigFactory
 {

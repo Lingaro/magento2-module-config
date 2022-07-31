@@ -3,8 +3,11 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Orba\Config\Api\ConfigInterface;
 
@@ -32,25 +35,25 @@ class Config implements ConfigInterface
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
     /** @var string */
-    private $path;
+    private string $path;
 
     /** @var string */
-    private $value;
+    private string $value;
 
     /** @var string */
-    private $scope;
+    private string $scope;
 
     /** @var string|null */
-    private $code;
+    private ?string $code;
 
     /** @var string */
-    private $state;
+    private string $state;
 
     /** @var int */
-    private $scopeId;
+    private int $scopeId;
 
     /** @var string */
-    private $importedValueHash;
+    private string $importedValueHash;
 
     /**
      * Config constructor.
@@ -60,11 +63,13 @@ class Config implements ConfigInterface
     {
         $this->path = $data[self::FIELD_PATH];
         $this->value = $data[self::FIELD_VALUE] ?? null;
-        $this->scope = empty($data[self::FIELD_SCOPE]) ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : $data[self::FIELD_SCOPE];
         $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];
         $this->scopeId = $data[self::FIELD_SCOPE_ID] ?? null;
         $this->importedValueHash = $data[self::FIELD_IMPORTED_VALUE_HASH] ?? '';
+        $this->scope = empty($data[self::FIELD_SCOPE])
+            ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+            : $data[self::FIELD_SCOPE];
     }
 
     /**
@@ -128,6 +133,13 @@ class Config implements ConfigInterface
     /**
      * @return array
      */
+    #[ArrayShape([
+        'path' => "mixed|string",
+        'scope' => "mixed|string",
+        'scope_id' => "int|mixed|null",
+        'value' => "mixed|null|string",
+        'imported_value_hash' => "mixed|string"
+    ])]
     public function getAllData() : array
     {
         return [

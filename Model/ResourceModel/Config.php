@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
@@ -32,6 +34,7 @@ class Config extends AbstractDb
         if (empty($configs)) {
             return;
         }
+
         $ids = array_filter(
             array_map(
                 function (ConfigInterface $config): ?string {
@@ -40,6 +43,7 @@ class Config extends AbstractDb
                 $configs
             )
         );
+
         $connection = $this->getConnection();
         $connection->delete(
             $connection->getTableName(self::TABLE_NAME),
@@ -78,12 +82,14 @@ class Config extends AbstractDb
         if (empty($configs)) {
             return;
         }
+
         $configsAsArray = array_map(
             function ($configModel) {
                 return $configModel->getAllData();
             },
             $configs
         );
+
         $connection = $this->getConnection();
         $tableName = $connection->getTableName(self::TABLE_NAME);
         $tmpTableName = $connection->getTableName(self::TMP_TABLE_NAME);
@@ -93,22 +99,23 @@ class Config extends AbstractDb
             $tmpTableName,
             $configsAsArray
         );
-        $select = $connection->select()
-            ->from(
-                [$tableName],
-                []
-            )
-            ->joinInner(
-                ['tmp_table' => $tmpTableName],
-                '(`main_table`.`scope` = `tmp_table`.`scope`)'
-                . 'AND (`main_table`.`scope_id` = `tmp_table`.`scope_id`)'
-                . 'AND (`main_table`.`path` = `tmp_table`.`path`)',
-                ['value', 'imported_value_hash']
-            );
+
+        $select = $connection->select()->from(
+            [$tableName],
+            []
+        )->joinInner(
+            ['tmp_table' => $tmpTableName],
+            '(`main_table`.`scope` = `tmp_table`.`scope`)'
+            . 'AND (`main_table`.`scope_id` = `tmp_table`.`scope_id`)'
+            . 'AND (`main_table`.`path` = `tmp_table`.`path`)',
+            ['value', 'imported_value_hash']
+        );
+
         $query = $connection->updateFromSelect(
             $select,
             ['main_table' => $tableName]
         );
+
         $connection->query($query);
         $connection->dropTemporaryTable($tmpTableName);
     }

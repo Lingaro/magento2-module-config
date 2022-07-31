@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv;
 
 use Exception;
@@ -16,16 +18,16 @@ use Orba\Config\Model\MappedConfigCollectionFactory;
 class Reader
 {
     /** @var Csv */
-    private $csv;
+    private Csv $csv;
 
     /** @var ConfigFactory */
-    private $configFactory;
+    private ConfigFactory $configFactory;
 
     /** @var RequiredColumnsValidator */
-    private $requiredColumnsValidator;
+    private RequiredColumnsValidator $requiredColumnsValidator;
 
     /** @var MappedConfigCollection */
-    private $mappedConfigCollection;
+    private MappedConfigCollection $mappedConfigCollection;
 
     /**
      * Reader constructor.
@@ -61,6 +63,7 @@ class Reader
                 __('File %1 can not be read', $path)
             );
         }
+
         $this->requiredColumnsValidator->validate($data);
 
         // remove headers from data
@@ -71,6 +74,7 @@ class Reader
             $config = $this->configFactory->create($headers, $row, $env);
             $this->mappedConfigCollection->add($config);
         }
+
         return $this->mappedConfigCollection;
     }
 }

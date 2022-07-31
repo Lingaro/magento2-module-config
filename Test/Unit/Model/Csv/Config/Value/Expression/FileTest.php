@@ -1,7 +1,13 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config\Value\Expression;
 
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
 use Orba\Config\Model\Csv\Config\Value\Expression\File;
@@ -10,23 +16,35 @@ use PHPUnit\Framework\MockObject\MockObject;
 class FileTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var File */
-    private $file;
+    private File $file;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
+
         $this->arguments = $this->objectManager->getConstructArguments(File::class);
         $this->file = $this->objectManager->getObject(File::class, $this->arguments);
     }
 
+    /**
+     * @return void
+     */
     public function testNameIsCorrect(): void
     {
         $this->assertEquals('file', $this->file->getName());
     }
 
+    /**
+     * @return void
+     * @throws LocalizedException
+     * @throws FileSystemException
+     */
     public function testRealValueCannotBeReadForNonReadableFile(): void
     {
         $name = '/var/www/magento.txt';
@@ -40,11 +58,16 @@ class FileTest extends BaseTestCase
             ->with($name);
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/File .* can not be read/');
+        $this->expectExceptionMessageMatches('/File .* can not be read/');
 
         $this->file->getRealValue($name);
     }
 
+    /**
+     * @return void
+     * @throws FileSystemException
+     * @throws LocalizedException
+     */
     public function testRealValueIsReadForReadableFile(): void
     {
         $name = '/var/www/magento.txt';

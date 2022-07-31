@@ -1,4 +1,10 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
+
 namespace Orba\Config\Model\StateProcessor;
 
 use Orba\Config\Api\ConfigInterface;
@@ -14,7 +20,7 @@ use Orba\Config\Model\Config\ConfigFactory;
 class Once implements StateProcessorInterface
 {
     /** @var ConfigFactory */
-    protected $configFactory;
+    protected ConfigFactory $configFactory;
 
     /**
      * Once constructor.
