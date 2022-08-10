@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Orba\Config\Model\Csv;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Orba\Config\Api\ConfigInterface;
 
@@ -34,26 +33,13 @@ class Config implements ConfigInterface
 
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
-    /** @var string */
-    private string $path;
-
-    /** @var string */
-    private string $value;
-
-    /** @var string */
-    private string $scope;
-
-    /** @var string|null */
+    private ?string $path;
+    private ?string $value;
+    private ?string $scope;
     private ?string $code;
-
-    /** @var string */
-    private string $state;
-
-    /** @var int */
-    private int $scopeId;
-
-    /** @var string */
-    private string $importedValueHash;
+    private ?string $state;
+    private ?int $scopeId;
+    private ?string $importedValueHash;
 
     /**
      * Config constructor.
@@ -133,13 +119,6 @@ class Config implements ConfigInterface
     /**
      * @return array
      */
-    #[ArrayShape([
-        'path' => "mixed|string",
-        'scope' => "mixed|string",
-        'scope_id' => "int|mixed|null",
-        'value' => "mixed|null|string",
-        'imported_value_hash' => "mixed|string"
-    ])]
     public function getAllData() : array
     {
         return [

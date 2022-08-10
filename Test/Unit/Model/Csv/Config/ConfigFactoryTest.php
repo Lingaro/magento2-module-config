@@ -90,7 +90,7 @@ class ConfigFactoryTest extends BaseTestCase
         $this->factory = $this->objectManager->getObject(ConfigFactory::class, $this->arguments);
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Value column .* does not exist/');
+        $this->expectExceptionMessageMatches('/Value column .* does not exist/');
 
         $this->factory->create($headers, $values, $env);
     }

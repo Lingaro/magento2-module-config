@@ -26,7 +26,7 @@ class ConfigKeyGeneratorTest extends BaseTestCase
     /**
      * @param string $path
      * @param string $scope
-     * @param string|null $code
+     * @param int|null $code
      * @param string $expectedKey
      *
      * @dataProvider csvDataProvider
@@ -34,7 +34,7 @@ class ConfigKeyGeneratorTest extends BaseTestCase
     public function testGeneratorGeneratesCorrectKeyForCsv(
         string $path,
         string $scope,
-        ?string $code,
+        ?int $code,
         string $expectedKey
     ): void {
         /** @var Config|MockObject $configMock */

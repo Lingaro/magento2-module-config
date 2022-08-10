@@ -67,7 +67,7 @@ class ReaderTest extends BaseTestCase
             ->method('create');
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/File .* can not be read/');
+        $this->expectExceptionMessageMatches('/File .* can not be read/');
 
         $this->reader->readConfigFile($path);
     }

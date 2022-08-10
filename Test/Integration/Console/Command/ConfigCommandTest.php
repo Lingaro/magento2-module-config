@@ -91,7 +91,7 @@ class ConfigCommandTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->fileSystem = $this->objectManager->get(Filesystem::class);

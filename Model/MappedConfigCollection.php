@@ -11,7 +11,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Orba\Config\Api\ConfigInterface;
 use Orba\Config\Api\MappedConfigCollectionInterface;
 use Orba\Config\Helper\ConfigKeyGenerator;
-use ReturnTypeWillChange;
 
 class MappedConfigCollection implements MappedConfigCollectionInterface
 {
@@ -36,8 +35,8 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
     /**
      * @return false|mixed
      */
-    #[ReturnTypeWillChange]
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         return current($this->mappedData);
     }
@@ -53,8 +52,8 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
     /**
      * @return int|string|null
      */
-    #[ReturnTypeWillChange]
-    public function key(): int|string|null
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return key($this->mappedData);
     }
@@ -88,8 +87,8 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
      * @param $offset
      * @return mixed
      */
-    #[ReturnTypeWillChange]
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->mappedData[$offset];
     }
@@ -100,7 +99,7 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
      * @return void
      * @throws LocalizedException
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         throw new LocalizedException(
@@ -113,7 +112,7 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
      * @return void
      * @throws LocalizedException
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         throw new LocalizedException(
@@ -124,7 +123,7 @@ class MappedConfigCollection implements MappedConfigCollectionInterface
     /**
      * @return int|void
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->mappedData);
