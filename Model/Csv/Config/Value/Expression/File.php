@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Model\Csv\Config\Value\Expression;
 
@@ -9,7 +14,7 @@ use Magento\Framework\Filesystem\Driver\File as DriverFile;
 class File extends AbstractExpression
 {
     /** @var DriverFile */
-    private $driverFile;
+    private DriverFile $driverFile;
 
     /**
      * File constructor.
@@ -41,6 +46,7 @@ class File extends AbstractExpression
                 __('File %1 can not be read', $value)
             );
         }
+
         return $this->driverFile->fileGetContents($value);
     }
 }

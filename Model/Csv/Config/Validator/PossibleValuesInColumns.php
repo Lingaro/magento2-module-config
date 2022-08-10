@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config\Validator;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -10,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 class PossibleValuesInColumns implements ValidatorInterface
 {
     /** @var array */
-    private $columns;
+    private array $columns;
 
     /**
      * PossibleValuesInColumns constructor.

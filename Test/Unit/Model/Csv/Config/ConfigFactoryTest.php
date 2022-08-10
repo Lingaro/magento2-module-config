@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config;
 
@@ -12,12 +17,12 @@ use PHPUnit\Framework\MockObject\MockObject;
 class ConfigFactoryTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var ConfigFactory */
-    private $factory;
+    private ConfigFactory $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(ConfigFactory::class);
@@ -85,7 +90,7 @@ class ConfigFactoryTest extends BaseTestCase
         $this->factory = $this->objectManager->getObject(ConfigFactory::class, $this->arguments);
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Value column .* does not exist/');
+        $this->expectExceptionMessageMatches('/Value column .* does not exist/');
 
         $this->factory->create($headers, $values, $env);
     }

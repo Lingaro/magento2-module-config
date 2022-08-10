@@ -1,16 +1,20 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Model\Config;
 
 use Exception;
 use Orba\Config\Api\ConfigInterface;
-use Orba\Config\Model\Config;
 use Orba\Config\Model\Config\OperationsRegistry\ConfigChange;
 
 class ConfigProcessor
 {
     /** @var ConfigRepository */
-    private $configRepository;
+    private ConfigRepository $configRepository;
 
     /**
      * ConfigProcessor constructor.
@@ -34,6 +38,7 @@ class ConfigProcessor
             },
             array_merge($operationsRegistry->getToUpdateConfigs(), $operationsRegistry->getToUpdateHashConfigs())
         );
+
         $this->configRepository->updateConfigs($configsToUpdate);
         $configsToRemove = array_map(
             function (ConfigChange $configChange): ConfigInterface {
@@ -41,6 +46,7 @@ class ConfigProcessor
             },
             $operationsRegistry->getToRemoveConfigs()
         );
+
         $this->configRepository->removeConfigs($configsToRemove);
     }
 }

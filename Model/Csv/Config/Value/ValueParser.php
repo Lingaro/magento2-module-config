@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config\Value;
 
 use Orba\Config\Model\Csv\Config\Value\Expression\AbstractExpression;
@@ -10,7 +12,7 @@ use Orba\Config\Model\Csv\Config\Value\Expression\AbstractExpression;
 class ValueParser
 {
     /** @var AbstractExpression[] */
-    private $expressions;
+    private array $expressions;
 
     /**
      * ValueParser constructor.
@@ -33,12 +35,15 @@ class ValueParser
             if ($matches === null) {
                 continue;
             }
+
             foreach ($matches as $expressionValue => $parameter) {
                 $realValue = $expressionObject->getRealValue($parameter);
                 $value = str_replace($expressionValue, $realValue, $value);
             }
+
             break;
         }
+
         return $value;
     }
 }

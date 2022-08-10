@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config\Value\Expression;
 
 /**
@@ -25,9 +27,11 @@ abstract class AbstractExpression
         if ($matchesNumber === 0) {
             return null;
         }
+
         if (count($matches) !== 2) {
             return null;
         }
+
         return array_combine($matches[0], $matches[1]);
     }
 

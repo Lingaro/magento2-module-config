@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config\Value\Expression;
 
@@ -9,23 +14,32 @@ use PHPUnit\Framework\MockObject\MockObject;
 class NullExprTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var NullExpr */
-    private $nullExpr;
+    private NullExpr $nullExpr;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(NullExpr::class);
         $this->nullExpr = $this->objectManager->getObject(NullExpr::class, $this->arguments);
     }
 
+    /**
+     * @return void
+     */
     public function testNameIsCorrect(): void
     {
         $this->assertEquals('null', $this->nullExpr->getName());
     }
 
+    /**
+     * @return void
+     */
     public function testRealValueIsReadForReadableFile(): void
     {
         $name = '';

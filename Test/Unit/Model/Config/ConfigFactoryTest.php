@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv;
 
@@ -21,7 +26,7 @@ class ConfigFactoryTest extends BaseTestCase
     /** @var MockObject | Config  */
     private $createdConfigMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(ConfigFactory::class);

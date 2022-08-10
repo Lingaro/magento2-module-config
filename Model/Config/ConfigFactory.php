@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Config;
 
 use Magento\Config\Model\Config;
@@ -13,7 +15,7 @@ use Orba\Config\Api\ConfigInterface;
 class ConfigFactory
 {
     /** @var Factory */
-    private $originalConfigFactory;
+    private Factory $originalConfigFactory;
 
     /**
      * ConfigFactory constructor.
@@ -42,6 +44,7 @@ class ConfigFactory
             default:
                 $config->setScopeId(0);
         }
+
         return $config;
     }
 }

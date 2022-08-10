@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv;
 
@@ -15,15 +20,18 @@ use Orba\Config\Model\MappedConfigCollectionFactory;
 class ReaderTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var Reader */
-    private $reader;
+    private Reader $reader;
 
     /** @var MappedConfigCollection|MockObject */
-    private $mappedConfigCollectionMock;
+    private MockObject $mappedConfigCollectionMock;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(Reader::class);
@@ -41,6 +49,10 @@ class ReaderTest extends BaseTestCase
         $this->reader = $this->objectManager->getObject(Reader::class, $this->arguments);
     }
 
+    /**
+     * @return void
+     * @throws LocalizedException
+     */
     public function testExceptionIsThrownWhenCsvCannotBeRead(): void
     {
         $path = '/path1/file2';
@@ -55,11 +67,15 @@ class ReaderTest extends BaseTestCase
             ->method('create');
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/File .* can not be read/');
+        $this->expectExceptionMessageMatches('/File .* can not be read/');
 
         $this->reader->readConfigFile($path);
     }
 
+    /**
+     * @return void
+     * @throws LocalizedException
+     */
     public function testFileIsCorrectlyRead(): void
     {
         $env = 'env1';

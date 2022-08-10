@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config\Validator;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -10,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 class RequiredFields implements ValidatorInterface
 {
     /** @var string[] */
-    private $requiredFields;
+    private array $requiredFields;
 
     /**
      * RequiredFields constructor.
@@ -27,7 +29,7 @@ class RequiredFields implements ValidatorInterface
      */
     public function validate(array $data): void
     {
-        foreach ($this->requiredFields as $key => $field) {
+        foreach ($this->requiredFields as $field) {
             if (empty($data[$field])) {
                 throw new LocalizedException(
                     __('Column %1 can not be empty in config file', $field)

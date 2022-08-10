@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+<!--
+/**
+* @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+*/
+-->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="core_config_data" resource="default" engine="innodb" comment="Config Data">

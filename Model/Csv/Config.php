@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -31,26 +33,13 @@ class Config implements ConfigInterface
 
     public const FIELD_ENV_VALUE_PREFIX = 'value:';
 
-    /** @var string */
-    private $path;
-
-    /** @var string */
-    private $value;
-
-    /** @var string */
-    private $scope;
-
-    /** @var string|null */
-    private $code;
-
-    /** @var string */
-    private $state;
-
-    /** @var int */
-    private $scopeId;
-
-    /** @var string */
-    private $importedValueHash;
+    private ?string $path;
+    private ?string $value;
+    private ?string $scope;
+    private ?string $code;
+    private ?string $state;
+    private ?int $scopeId;
+    private ?string $importedValueHash;
 
     /**
      * Config constructor.
@@ -60,11 +49,13 @@ class Config implements ConfigInterface
     {
         $this->path = $data[self::FIELD_PATH];
         $this->value = $data[self::FIELD_VALUE] ?? null;
-        $this->scope = empty($data[self::FIELD_SCOPE]) ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : $data[self::FIELD_SCOPE];
         $this->code = $data[self::FIELD_CODE] ?? null;
         $this->state = $data[self::FIELD_STATE];
         $this->scopeId = $data[self::FIELD_SCOPE_ID] ?? null;
         $this->importedValueHash = $data[self::FIELD_IMPORTED_VALUE_HASH] ?? '';
+        $this->scope = empty($data[self::FIELD_SCOPE])
+            ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+            : $data[self::FIELD_SCOPE];
     }
 
     /**

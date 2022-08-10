@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config\Validator;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -17,7 +19,7 @@ use Orba\Config\Model\Csv\Config;
 class AvailableScope implements ValidatorInterface
 {
     /** @var ScopeMap */
-    private $scopeMap;
+    private ScopeMap $scopeMap;
 
     public function __construct(
         ScopeMap $scopeMap

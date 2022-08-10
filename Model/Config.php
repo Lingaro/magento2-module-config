@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model;
 
 use Magento\Config\Model\Config as ParentConfig;
@@ -31,6 +33,9 @@ class Config extends ParentConfig implements ConfigInterface
         return $this->getData('path');
     }
 
+    /**
+     * @return string
+     */
     public function getScopeType(): string
     {
         $this->load();
@@ -59,7 +64,8 @@ class Config extends ParentConfig implements ConfigInterface
      */
     public function getScopeId(): ?int
     {
-        return $this->getData('scope_id');
+        $scopeId = $this->getData('scope_id');
+        return $scopeId === null ? $scopeId : (int) $scopeId;
     }
 
     /**

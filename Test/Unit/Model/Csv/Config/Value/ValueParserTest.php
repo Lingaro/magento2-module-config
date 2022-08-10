@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Config\Value;
 
@@ -10,17 +15,23 @@ use PHPUnit\Framework\MockObject\MockObject;
 class ValueParserTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var ValueParser */
-    private $parser;
+    private ValueParser $parser;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(ValueParser::class);
     }
 
+    /**
+     * @return void
+     */
     public function testParseRawDataCorrectly(): void
     {
         $rawValue = 'test(A)test(B)test';

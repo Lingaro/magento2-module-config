@@ -3,9 +3,11 @@
  * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
  */
 
+declare(strict_types=1);
+
 namespace Orba\Config\Model\Csv\Config;
 
-use Magento\Config\Model\Config as MagentoConfig;
+use Magento\Config\Model\Config\StructureFactory;
 use Magento\Config\Model\Config\Structure\Element\Field;
 use Magento\Config\Model\Config\StructureElementInterface;
 use Magento\Framework\DataObject;
@@ -17,21 +19,22 @@ class ValueGetter
     public const MODEL_PARSE_METHOD = 'beforeSave';
 
     /**
-     * @var MagentoConfig\StructureFactory
+     * @var StructureFactory
      */
-    private $structureFactory;
+    private StructureFactory $structureFactory;
 
     /**
      * @var array
      */
-    private $backendModels = [];
+    private array $backendModels = [];
+
     /**
      * @var BackendFactory
      */
-    private $valueFactory;
+    private BackendFactory $valueFactory;
 
     public function __construct(
-        MagentoConfig\StructureFactory $structureFactory,
+        StructureFactory $structureFactory,
         BackendFactory $valueFactory
     ) {
         $this->structureFactory = $structureFactory;
@@ -49,7 +52,9 @@ class ValueGetter
         /** @var StructureElementInterface $field */
         $field = $structure->getElementByConfigPath($path);
 
-        return $field instanceof Field && $field->hasBackendModel() ? $field->getData()['backend_model'] : null;
+        return $field instanceof Field && $field->hasBackendModel()
+            ? $field->getData()['backend_model']
+            : null;
     }
 
     /**
@@ -62,16 +67,19 @@ class ValueGetter
         if (!$backendModelName) {
             return null;
         }
+
         if (!array_key_exists($backendModelName, $this->backendModels)) {
             $backendModel = $this->valueFactory->create(
                 $backendModelName,
                 []
             );
+
             if (!($backendModel instanceof AbstractModel ||
                 ($backendModel instanceof DataObject && method_exists($backendModel, self::MODEL_PARSE_METHOD))
             )) {
                 $backendModel = null;
             }
+
             $this->backendModels[$backendModelName] = $backendModel;
         }
 
@@ -84,6 +92,7 @@ class ValueGetter
         if ($backendModel === null) {
             return $value;
         }
+
         $backendModel->setValue($value);
         $methodName = self::MODEL_PARSE_METHOD;
         $backendModel->$methodName();

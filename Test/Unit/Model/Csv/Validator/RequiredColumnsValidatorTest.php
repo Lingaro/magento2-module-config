@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Test\Unit\Model\Csv\Validator;
 
@@ -11,12 +16,15 @@ use PHPUnit\Framework\MockObject\MockObject;
 class RequiredColumnsValidatorTest extends BaseTestCase
 {
     /** @var MockObject[] */
-    private $arguments;
+    private array $arguments;
 
     /** @var RequiredColumnsValidator */
-    private $validator;
+    private RequiredColumnsValidator $validator;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
         $this->arguments = $this->objectManager->getConstructArguments(RequiredColumnsValidator::class);
@@ -57,7 +65,7 @@ class RequiredColumnsValidatorTest extends BaseTestCase
         );
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessageRegExp('/Required column .* is not available in the config file/');
+        $this->expectExceptionMessageMatches('/Required column .* is not available in the config file/');
         $this->validator->validate($data);
     }
 

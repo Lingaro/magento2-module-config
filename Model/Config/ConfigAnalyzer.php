@@ -1,37 +1,34 @@
 <?php
+/**
+ * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ */
+
+declare(strict_types=1);
 
 namespace Orba\Config\Model\Config;
 
 use Orba\Config\Api\MappedConfigCollectionInterface;
-use Orba\Config\Helper\ConfigKeyGenerator;
 use Orba\Config\Model\StateProcessorPool;
-use Orba\Config\Model\Config\OperationsRegistryFactory;
 use Exception;
 
 class ConfigAnalyzer
 {
     /** @var OperationsRegistryFactory */
-    private $operationsRegistryFactory;
-
-    /** @var ConfigKeyGenerator */
-    private $configKeyGenerator;
+    private OperationsRegistryFactory $operationsRegistryFactory;
 
     /** @var StateProcessorPool */
-    private $stateProcessorPool;
+    private StateProcessorPool $stateProcessorPool;
 
     /**
      * ConfigAnalyzer constructor.
      * @param OperationsRegistryFactory $operationsRegistryFactory
-     * @param ConfigKeyGenerator $configKeyGenerator
      * @param StateProcessorPool $stateProcessorPool
      */
     public function __construct(
         OperationsRegistryFactory $operationsRegistryFactory,
-        ConfigKeyGenerator $configKeyGenerator,
         StateProcessorPool $stateProcessorPool
     ) {
         $this->operationsRegistryFactory = $operationsRegistryFactory;
-        $this->configKeyGenerator = $configKeyGenerator;
         $this->stateProcessorPool = $stateProcessorPool;
     }
 
@@ -44,8 +41,7 @@ class ConfigAnalyzer
     public function prepareConfigCollection(
         MappedConfigCollectionInterface $databaseConfigs,
         MappedConfigCollectionInterface $fileConfigs
-    ): OperationsRegistry
-    {
+    ): OperationsRegistry {
         $operationsRegistry = $this->operationsRegistryFactory->create();
         foreach ($fileConfigs as $fileConfig) {
             $this->stateProcessorPool
@@ -56,6 +52,7 @@ class ConfigAnalyzer
                     $operationsRegistry
                 );
         }
+
         return $operationsRegistry;
     }
 }
