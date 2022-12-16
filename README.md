@@ -106,7 +106,7 @@ ENV expression allows you to set secret or environment-specific configuration us
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/general/private_key|default| |{env RECAPTCHA_KEY}|always
+|msp_securitysuite_recaptcha/general/private_key|default| |{{env RECAPTCHA_KEY}}|always
 
 RECAPTCHA_KEY=passAbc123 bin/magento orba:config --files myConfiguration.csv
 
@@ -120,7 +120,7 @@ FILE expression allows you to set secret or environment-specific configuration u
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/general/private_key|default| |{file .recaptcha_key}|always
+|msp_securitysuite_recaptcha/general/private_key|default| |{{file .recaptcha_key}}|always
 
 ```
 touch .recaptcha_key
@@ -135,7 +135,7 @@ NULL expression allows you to set configuration to null (when it is important to
 
 |path|scope|code|value|state
 |---|---|---|---|---|
-|msp_securitysuite_recaptcha/backend/enabled|default| |{null}|always
+|msp_securitysuite_recaptcha/backend/enabled|default| |{{null}}|always
 
 ### Environment-specific values
 

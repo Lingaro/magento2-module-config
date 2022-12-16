@@ -25,9 +25,9 @@ class ValueParser
 
     /**
      * @param string $rawValue
-     * @return string
+     * @return string | null
      */
-    public function parse(string $rawValue): string
+    public function parse(string $rawValue): ?string
     {
         $value = $rawValue;
         foreach ($this->expressions as $expressionObject) {
@@ -38,7 +38,7 @@ class ValueParser
 
             foreach ($matches as $expressionValue => $parameter) {
                 $realValue = $expressionObject->getRealValue($parameter);
-                $value = str_replace($expressionValue, $realValue, $value);
+                $value = $realValue !== null ? str_replace($expressionValue, $realValue, $value) : $realValue;
             }
 
             break;
