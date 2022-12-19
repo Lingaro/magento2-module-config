@@ -26,8 +26,8 @@ class Hash
      * @param string $value
      * @return string
      */
-    public function generate(string $value) : string
+    public function generate(?string $value) : ?string
     {
-        return sha1($value);
+        return sha1($value !== null ? $value : 'null');
     }
 }

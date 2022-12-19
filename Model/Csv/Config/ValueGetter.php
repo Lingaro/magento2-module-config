@@ -86,7 +86,7 @@ class ValueGetter
         return $this->backendModels[$backendModelName];
     }
 
-    public function getValueWithBackendModel(string $path, string $value): string
+    public function getValueWithBackendModel(string $path, ?string $value): ?string
     {
         $backendModel = $this->getBackendModel($path);
         if ($backendModel === null) {
