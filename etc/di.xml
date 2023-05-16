@@ -1,44 +1,45 @@
 <?xml version="1.0"?>
 <!--
 /**
-* @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
-*/
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Orba\Config\Model\Csv\Config\Value\ValueParser">
+    <type name="Lingaro\Config\Model\Csv\Config\Value\ValueParser">
         <arguments>
             <argument name="expressions" xsi:type="array">
-                <item name="env" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\Env</item>
-                <item name="file" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\File</item>
-                <item name="null" xsi:type="object">Orba\Config\Model\Csv\Config\Value\Expression\NullExpr</item>
+                <item name="env" xsi:type="object">Lingaro\Config\Model\Csv\Config\Value\Expression\Env</item>
+                <item name="file" xsi:type="object">Lingaro\Config\Model\Csv\Config\Value\Expression\File</item>
+                <item name="null" xsi:type="object">Lingaro\Config\Model\Csv\Config\Value\Expression\NullExpr</item>
             </argument>
         </arguments>
     </type>
-    <type name="Orba\Config\Model\Csv\Validator\RequiredColumnsValidator">
+    <type name="Lingaro\Config\Model\Csv\Validator\RequiredColumnsValidator">
         <arguments>
             <argument name="columns" xsi:type="array">
-                <item name="path" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
-                <item name="value" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_VALUE</item>
-                <item name="scope" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
-                <item name="code" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_CODE</item>
-                <item name="state" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                <item name="path" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item name="value" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_VALUE</item>
+                <item name="scope" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_SCOPE</item>
+                <item name="code" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_CODE</item>
+                <item name="state" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_STATE</item>
             </argument>
         </arguments>
     </type>
-    <type name="Orba\Config\Model\Csv\Config\Validator\RequiredFields">
+    <type name="Lingaro\Config\Model\Csv\Config\Validator\RequiredFields">
         <arguments>
             <argument name="requiredFields" xsi:type="array">
-                <item name="path" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_PATH</item>
-                <item name="state" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                <item name="path" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_PATH</item>
+                <item name="state" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_STATE</item>
             </argument>
         </arguments>
     </type>
-    <type name="Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns">
+    <type name="Lingaro\Config\Model\Csv\Config\Validator\PossibleValuesInColumns">
         <arguments>
             <argument name="columns" xsi:type="array">
                 <item name="scope" xsi:type="array">
-                    <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_SCOPE</item>
+                    <item name="name" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_SCOPE</item>
                     <item name="values" xsi:type="array">
                         <item name="empty" xsi:type="string" />
                         <item name="default" xsi:type="const">
@@ -53,29 +54,29 @@
                     </item>
                 </item>
                 <item name="state" xsi:type="array">
-                    <item name="name" xsi:type="const">Orba\Config\Model\Csv\Config::FIELD_STATE</item>
+                    <item name="name" xsi:type="const">Lingaro\Config\Model\Csv\Config::FIELD_STATE</item>
                     <item name="values" xsi:type="array">
-                        <item name="always" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ALWAYS</item>
-                        <item name="init" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_INIT</item>
-                        <item name="ignored" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_IGNORED</item>
-                        <item name="once" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ONCE</item>
-                        <item name="absent" xsi:type="const">Orba\Config\Model\Csv\Config::STATE_ABSENT</item>
+                        <item name="always" xsi:type="const">Lingaro\Config\Model\Csv\Config::STATE_ALWAYS</item>
+                        <item name="init" xsi:type="const">Lingaro\Config\Model\Csv\Config::STATE_INIT</item>
+                        <item name="ignored" xsi:type="const">Lingaro\Config\Model\Csv\Config::STATE_IGNORED</item>
+                        <item name="once" xsi:type="const">Lingaro\Config\Model\Csv\Config::STATE_ONCE</item>
+                        <item name="absent" xsi:type="const">Lingaro\Config\Model\Csv\Config::STATE_ABSENT</item>
                     </item>
                 </item>
             </argument>
         </arguments>
     </type>
-    <type name="Orba\Config\Model\Csv\Config\ConfigFactory">
+    <type name="Lingaro\Config\Model\Csv\Config\ConfigFactory">
         <arguments>
             <argument name="configValidators" xsi:type="array">
                 <item name="requiredFields" xsi:type="object">
-                    Orba\Config\Model\Csv\Config\Validator\RequiredFields
+                    Lingaro\Config\Model\Csv\Config\Validator\RequiredFields
                 </item>
                 <item name="possibleValuesInColumns" xsi:type="object">
-                    Orba\Config\Model\Csv\Config\Validator\PossibleValuesInColumns
+                    Lingaro\Config\Model\Csv\Config\Validator\PossibleValuesInColumns
                 </item>
                 <item name="availableScope" xsi:type="object">
-                    Orba\Config\Model\Csv\Config\Validator\AvailableScope
+                    Lingaro\Config\Model\Csv\Config\Validator\AvailableScope
                 </item>
             </argument>
         </arguments>
@@ -83,31 +84,31 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="pgUtilsInstallConfig" xsi:type="object">Orba\Config\Console\Command\ConfigCommand\Proxy</item>
+                <item name="pgUtilsInstallConfig" xsi:type="object">Lingaro\Config\Console\Command\ConfigCommand\Proxy</item>
             </argument>
         </arguments>
     </type>
-    <type name="Orba\Config\Model\StateProcessorPool">
+    <type name="Lingaro\Config\Model\StateProcessorPool">
         <arguments>
             <argument name="processors" xsi:type="array">
                 <item name="always" xsi:type="array">
-                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Always</item>
+                    <item name="class" xsi:type="string">Lingaro\Config\Model\StateProcessor\Always</item>
                     <item name="disable" xsi:type="boolean">false</item>
                 </item>
                 <item name="init" xsi:type="array">
-                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Init</item>
+                    <item name="class" xsi:type="string">Lingaro\Config\Model\StateProcessor\Init</item>
                     <item name="disable" xsi:type="boolean">false</item>
                 </item>
                 <item name="ignored" xsi:type="array">
-                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Ignored</item>
+                    <item name="class" xsi:type="string">Lingaro\Config\Model\StateProcessor\Ignored</item>
                     <item name="disable" xsi:type="boolean">false</item>
                 </item>
                 <item name="once" xsi:type="array">
-                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Once</item>
+                    <item name="class" xsi:type="string">Lingaro\Config\Model\StateProcessor\Once</item>
                     <item name="disable" xsi:type="boolean">false</item>
                 </item>
                 <item name="absent" xsi:type="array">
-                    <item name="class" xsi:type="string">Orba\Config\Model\StateProcessor\Absent</item>
+                    <item name="class" xsi:type="string">Lingaro\Config\Model\StateProcessor\Absent</item>
                     <item name="disable" xsi:type="boolean">false</item>
                 </item>
             </argument>

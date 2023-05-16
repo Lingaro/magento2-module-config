@@ -1,18 +1,19 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Test\Unit\Model\Csv;
+namespace Lingaro\Config\Test\Unit\Model\Csv;
 
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
-use Orba\Config\Model\Csv\Config;
-use Orba\Config\Model\Csv\MultiReader;
+use Lingaro\Config\Model\Csv\Config;
+use Lingaro\Config\Model\Csv\MultiReader;
 use PHPUnit\Framework\MockObject\MockObject;
-use Orba\Config\Model\MappedConfigCollection;
-use Orba\Config\Model\MappedConfigCollectionFactory;
+use Lingaro\Config\Model\MappedConfigCollection;
+use Lingaro\Config\Model\MappedConfigCollectionFactory;
 
 class MultiReaderTest extends BaseTestCase
 {

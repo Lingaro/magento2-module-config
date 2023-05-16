@@ -1,25 +1,26 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Config;
+namespace Lingaro\Config\Model\Config;
 
 use Exception;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Orba\Config\Api\ConfigInterface;
-use Orba\Config\Api\MappedConfigCollectionInterface;
-use Orba\Config\Model\ResourceModel\Config\CollectionFactory;
-use Orba\Config\Model\ResourceModel\Config as ConfigResourceModel;
-use Orba\Config\Model\MappedConfigCollectionFactory;
-use Orba\Config\Helper\ScopeMap;
+use Lingaro\Config\Api\ConfigInterface;
+use Lingaro\Config\Api\MappedConfigCollectionInterface;
+use Lingaro\Config\Model\ResourceModel\Config\CollectionFactory;
+use Lingaro\Config\Model\ResourceModel\Config as ConfigResourceModel;
+use Lingaro\Config\Model\MappedConfigCollectionFactory;
+use Lingaro\Config\Helper\ScopeMap;
 
 /**
  * Class ConfigRepository
- * @package Orba\Config\Model\Config
+ * @package Lingaro\Config\Model\Config
  * @codeCoverageIgnore
  */
 class ConfigRepository

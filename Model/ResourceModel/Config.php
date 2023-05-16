@@ -1,18 +1,19 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\ResourceModel;
+namespace Lingaro\Config\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Orba\Config\Api\ConfigInterface;
+use Lingaro\Config\Api\ConfigInterface;
 
 /**
  * Class Config
- * @package Orba\Config\Model\ResourceModel
+ * @package Lingaro\Config\Model\ResourceModel
  * @codeCoverageIgnore
  */
 class Config extends AbstractDb

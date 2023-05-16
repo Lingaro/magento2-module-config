@@ -1,5 +1,5 @@
 {
-    "name": "orba/config",
+    "name": "lingaro/config",
     "description": "",
     "type": "magento2-module",
     "version": "1.0.4",
@@ -8,17 +8,16 @@
             "registration.php"
         ],
         "psr-4": {
-            "Orba\\Config\\": ""
+            "Lingaro\\Config\\": ""
         }
     },
     "authors": [
         {
-            "name": "Orba Sp. z o.o.",
-            "homepage": "https://orba.co/"
+            "name": "Lingaro sp. z o.o.",
+            "homepage": "https://lingarogroup.com/"
         }
     ],
     "license": [
-        "OSL-3.0",
-        "AFL-3.0"
+        "MIT"
     ]
 }

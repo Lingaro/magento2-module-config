@@ -1,18 +1,19 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Test\Unit\Model\Csv\Config;
+namespace Lingaro\Config\Test\Unit\Model\Csv\Config;
 
 use Magento\Config\Model\Config\Structure;
 use Magento\Config\Model\Config\Structure\Element\Field;
 use Magento\Framework\App\Config\ValueInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
-use Orba\Config\Model\Csv\Config\ValueGetter;
+use Lingaro\Config\Model\Csv\Config\ValueGetter;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ValueGetterTest extends BaseTestCase

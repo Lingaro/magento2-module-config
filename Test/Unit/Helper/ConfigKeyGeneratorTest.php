@@ -1,15 +1,16 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Test\Unit\Helper;
+namespace Lingaro\Config\Test\Unit\Helper;
 
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
-use Orba\Config\Api\ConfigInterface;
-use Orba\Config\Helper\ConfigKeyGenerator;
+use Lingaro\Config\Api\ConfigInterface;
+use Lingaro\Config\Helper\ConfigKeyGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ConfigKeyGeneratorTest extends BaseTestCase

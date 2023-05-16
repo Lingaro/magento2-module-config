@@ -1,15 +1,16 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Csv;
+namespace Lingaro\Config\Model\Csv;
 
 use Magento\Framework\Exception\LocalizedException;
-use Orba\Config\Model\MappedConfigCollection;
-use Orba\Config\Model\MappedConfigCollectionFactory;
+use Lingaro\Config\Model\MappedConfigCollection;
+use Lingaro\Config\Model\MappedConfigCollectionFactory;
 
 class MultiReader
 {

@@ -1,18 +1,19 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Csv\Config;
+namespace Lingaro\Config\Model\Csv\Config;
 
 use Magento\Framework\Exception\LocalizedException;
-use Orba\Config\Api\ConfigInterface;
-use Orba\Config\Model\Csv\Config;
-use Orba\Config\Model\Csv\Config\Validator\ValidatorInterface;
-use Orba\Config\Model\Csv\Config\Value\ValueParser;
-use Orba\Config\Helper\ScopeMap;
+use Lingaro\Config\Api\ConfigInterface;
+use Lingaro\Config\Model\Csv\Config;
+use Lingaro\Config\Model\Csv\Config\Validator\ValidatorInterface;
+use Lingaro\Config\Model\Csv\Config\Value\ValueParser;
+use Lingaro\Config\Helper\ScopeMap;
 
 class ConfigFactory
 {

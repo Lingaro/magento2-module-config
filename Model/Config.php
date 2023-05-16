@@ -1,18 +1,19 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model;
+namespace Lingaro\Config\Model;
 
 use Magento\Config\Model\Config as ParentConfig;
-use Orba\Config\Api\ConfigInterface;
+use Lingaro\Config\Api\ConfigInterface;
 
 /**
  * Class Config
- * @package Orba\Config\Model
+ * @package Lingaro\Config\Model
  * @codeCoverageIgnore
  */
 class Config extends ParentConfig implements ConfigInterface

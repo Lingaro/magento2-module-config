@@ -1,15 +1,16 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Utils;
+namespace Lingaro\Config\Utils;
 
 /**
  * Class Environment
- * @package Orba\Config\Utils
+ * @package Lingaro\Config\Utils
  * @codeCoverageIgnore
  */
 class Environment
