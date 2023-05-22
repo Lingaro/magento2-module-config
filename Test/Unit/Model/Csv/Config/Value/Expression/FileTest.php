@@ -1,16 +1,17 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Test\Unit\Model\Csv\Config\Value\Expression;
+namespace Lingaro\Config\Test\Unit\Model\Csv\Config\Value\Expression;
 
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\TestFramework\Unit\BaseTestCase;
-use Orba\Config\Model\Csv\Config\Value\Expression\File;
+use Lingaro\Config\Model\Csv\Config\Value\Expression\File;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FileTest extends BaseTestCase

@@ -1,4 +1,4 @@
-# Orba Config
+# Lingaro Config
 
 This module allows to manage Magento configuration (core_config_data) using csv files. It is meant as a replacement for native magento system including config.php, environment variables and commands `app:config:dump` and `app:config:import` due to their limitations.
 
@@ -14,7 +14,7 @@ This module allows to manage Magento configuration (core_config_data) using csv 
 
 3. In your CI/CD process, use this command to import the file automatically:
 
-    ``` bin/magento orba:config --files myConfiguration.csv ```
+    ``` bin/magento lingaro:config --files myConfiguration.csv ```
     
 The command clears all caches automatically, so changes should be immediately visible.
 
@@ -108,7 +108,7 @@ ENV expression allows you to set secret or environment-specific configuration us
 |---|---|---|---|---|
 |msp_securitysuite_recaptcha/general/private_key|default| |{{env RECAPTCHA_KEY}}|always
 
-RECAPTCHA_KEY=passAbc123 bin/magento orba:config --files myConfiguration.csv
+RECAPTCHA_KEY=passAbc123 bin/magento lingaro:config --files myConfiguration.csv
 
 Notice that this may be any environment variable. It needs not (and should not) be environment variable in Magento format, e.g. CONFIG__DEFAULT__CONTACT__EMAIL__RECIPIENT_EMAIL.
 
@@ -126,7 +126,7 @@ FILE expression allows you to set secret or environment-specific configuration u
 touch .recaptcha_key
 chmod 600 .recaptcha_key
 echo "passAbc123" > .recaptcha_key
-bin/magento orba:config --files myConfiguration.csv
+bin/magento lingaro:config --files myConfiguration.csv
 ```
 
 #### NULL
@@ -145,19 +145,19 @@ It is possible to define different values for different environments in the foll
 |---|---|---|---|---|---|---|
 |msp_securitysuite_recaptcha/backend/enabled|default| |0|1|2|always
 
-Based on parameters passed to orba:config command, the value saved in database will be as follows:
+Based on parameters passed to lingaro:config command, the value saved in database will be as follows:
 
 |command|value|
 |---|---|
-|orba:config configuration.csv|0|
-|orba:config --env=dev configuration.csv|1|
-|orba:config --env=prod configuration.csv|2|
+|lingaro:config configuration.csv|0|
+|lingaro:config --env=dev configuration.csv|1|
+|lingaro:config --env=prod configuration.csv|2|
 
 Watchout: If you specify --env=dev, but value:dev is empty, the installer will not use default value. Empty value will be saved.
 
 E.g.
 
-When you run ```orba:config --env=dev configuration.csv``` with the following file:
+When you run ```lingaro:config --env=dev configuration.csv``` with the following file:
 
 |path|scope|code|value|value:dev|state
 |---|---|---|---|---|---|
@@ -180,10 +180,10 @@ If you need different configuration for production, test and dev environments, u
     /dev.csv
     ```
     
-    The orba:config command allows you to specify multiple files - in such case, they are merged. In CI/CD process, make sure the command is run with different arguments based on environment:
-    - prod: orba:config --files common.csv prod.csv
-    - uat: orba:config --files common.csv uat.csv
-    - dev: orba:config --files common.csv dev.csv
+    The lingaro:config command allows you to specify multiple files - in such case, they are merged. In CI/CD process, make sure the command is run with different arguments based on environment:
+    - prod: lingaro:config --files common.csv prod.csv
+    - uat: lingaro:config --files common.csv uat.csv
+    - dev: lingaro:config --files common.csv dev.csv
 
 3. You may also define all configuration in common.csv, but load values from environment using "ENV" expression.
 
@@ -210,7 +210,7 @@ Notice that this config may have a stores scope value in database, set manually 
 
 ### Command
 
-bin/magento orba:config --files file1.csv file2.csv [--env=dev] [--dry-run] [-v]
+bin/magento lingaro:config --files file1.csv file2.csv [--env=dev] [--dry-run] [-v]
 
 If you specify several files, they will be merged. Final value is taken from the last file in which the configuration appears, in this case: from file2.csv.
 
@@ -229,7 +229,7 @@ Ignored: 0
 Total: 1
 ```
 
-With increased verbosity (```bin/magento orba:config -v```), the command prints additionally the list of configs per operation, e.g.:
+With increased verbosity (```bin/magento lingaro:config -v```), the command prints additionally the list of configs per operation, e.g.:
 
 ```
 Added:
@@ -244,14 +244,14 @@ sales/msrp/enabled websites b2c
 
 Updated Hash means config in csv had the same value as config in database, but imported_value_hash was missing in database, so update was necessary.
 
-Imported value hash is used to mark the config as imported using Orba_Config import.
+Imported value hash is used to mark the config as imported using Lingaro_Config import.
 
 You may run the command with --dry-run and increased verbosity to check how the import will affect database.
 
 ## Installation
 
 ```
-composer require orba/module-config
-bin/magento module:enable Orba_Config
+composer require lingaro/config
+bin/magento module:enable Lingaro_Config
 bin/magento setup:upgrade
 ```

@@ -1,15 +1,16 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model;
+namespace Lingaro\Config\Model;
 
-use Orba\Config\Model\Config\OperationsRegistry;
-use Orba\Config\Api\MappedConfigCollectionInterface;
-use Orba\Config\Api\ConfigInterface;
+use Lingaro\Config\Model\Config\OperationsRegistry;
+use Lingaro\Config\Api\MappedConfigCollectionInterface;
+use Lingaro\Config\Api\ConfigInterface;
 
 /**
  * Interface StateProcessorInterface

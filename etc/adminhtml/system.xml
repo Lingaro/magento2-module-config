@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
 <!--
 /**
-* @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
-*/
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="orba_config" showInDefault="0" showInWebsite="0" showInStore="0">
+        <section id="lingaro_config" showInDefault="0" showInWebsite="0" showInStore="0">
             <group id="config_test_group" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="0">
                 <field id="encrypted" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Encrypted</label>
-                    <config_path>orba_config/config_test_group/encrypted</config_path>
+                    <config_path>lingaro_config/config_test_group/encrypted</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="array_serialized" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>ArraySerialized</label>
-                    <config_path>orba_config/config_test_group/array_serialized</config_path>
+                    <config_path>lingaro_config/config_test_group/array_serialized</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
             </group>

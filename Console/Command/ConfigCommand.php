@@ -1,28 +1,29 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Console\Command;
+namespace Lingaro\Config\Console\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
-use Orba\Config\Model\Config\OperationsRegistry;
-use Orba\Config\Model\Csv\MultiReader;
+use Lingaro\Config\Model\Config\OperationsRegistry;
+use Lingaro\Config\Model\Csv\MultiReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Console\Cli;
-use Orba\Config\Model\Config\ConfigRepository;
-use Orba\Config\Model\Config\ConfigAnalyzer;
-use Orba\Config\Model\Config\ConfigProcessor;
-use Orba\Config\Model\Config\ConfigSummary;
+use Lingaro\Config\Model\Config\ConfigRepository;
+use Lingaro\Config\Model\Config\ConfigAnalyzer;
+use Lingaro\Config\Model\Config\ConfigProcessor;
+use Lingaro\Config\Model\Config\ConfigSummary;
 use Magento\Framework\App\Cache\Manager as CacheManager;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -32,7 +33,7 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
  */
 class ConfigCommand extends Command
 {
-    public const COMMAND_NAME = 'orba:config';
+    public const COMMAND_NAME = 'lingaro:config';
     public const COMMAND_DESCRIPTION = '';
 
     public const OPTION_DRY_RUN = 'dry-run';

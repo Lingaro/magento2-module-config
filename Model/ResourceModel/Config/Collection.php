@@ -1,19 +1,20 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\ResourceModel\Config;
+namespace Lingaro\Config\Model\ResourceModel\Config;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Orba\Config\Model\Config as ConfigModel;
-use Orba\Config\Model\ResourceModel\Config as ConfigResourceModel;
+use Lingaro\Config\Model\Config as ConfigModel;
+use Lingaro\Config\Model\ResourceModel\Config as ConfigResourceModel;
 
 /**
  * Class Collection
- * @package Orba\Config\Model\ResourceModel\Config
+ * @package Lingaro\Config\Model\ResourceModel\Config
  * @codeCoverageIgnore
  */
 class Collection extends AbstractCollection

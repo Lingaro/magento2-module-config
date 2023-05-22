@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Config;
+namespace Lingaro\Config\Model\Config;
 
-use Orba\Config\Api\ConfigInterface;
-use Orba\Config\Model\Config\OperationsRegistry\ConfigChange;
+use Lingaro\Config\Api\ConfigInterface;
+use Lingaro\Config\Model\Config\OperationsRegistry\ConfigChange;
 
 class OperationsRegistry
 {

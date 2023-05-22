@@ -1,20 +1,21 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Csv\Config\Validator;
+namespace Lingaro\Config\Model\Csv\Config\Validator;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Orba\Config\Helper\ScopeMap;
-use Orba\Config\Model\Csv\Config;
+use Lingaro\Config\Helper\ScopeMap;
+use Lingaro\Config\Model\Csv\Config;
 
 /**
  * Class AvailableScope
- * @package Orba\Config\Model\Csv\Config\Validator
+ * @package Lingaro\Config\Model\Csv\Config\Validator
  */
 class AvailableScope implements ValidatorInterface
 {

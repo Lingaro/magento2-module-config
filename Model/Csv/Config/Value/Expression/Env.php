@@ -1,13 +1,14 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Csv\Config\Value\Expression;
+namespace Lingaro\Config\Model\Csv\Config\Value\Expression;
 
-use Orba\Config\Utils\Environment;
+use Lingaro\Config\Utils\Environment;
 
 class Env extends AbstractExpression
 {

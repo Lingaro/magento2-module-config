@@ -1,16 +1,17 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Orba Sp. z o.o. (http://orba.co)
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
  */
 
 declare(strict_types=1);
 
-namespace Orba\Config\Model\Config;
+namespace Lingaro\Config\Model\Config;
 
 use Magento\Config\Model\Config;
 use Magento\Config\Model\Config\Factory;
 use Magento\Store\Model\ScopeInterface;
-use Orba\Config\Api\ConfigInterface;
+use Lingaro\Config\Api\ConfigInterface;
 
 class ConfigFactory
 {

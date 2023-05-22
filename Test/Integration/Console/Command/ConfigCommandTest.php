@@ -1,6 +1,10 @@
 <?php
+/**
+ * Copyright © 2023 Lingaro sp. z o.o. All rights reserved.
+ * See LICENSE for license details.
+ */
 
-namespace Orba\Config\Test\Integration\Console\Command;
+namespace Lingaro\Config\Test\Integration\Console\Command;
 
 use Magento\Backend\App\ConfigInterface;
 use Magento\Config\Model\Config\Backend\Encrypted;
@@ -17,9 +21,9 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
-use Orba\Config\Console\Command\ConfigCommand;
-use Orba\Config\Model\Config\ConfigRepository;
-use Orba\Config\Model\Csv\Config;
+use Lingaro\Config\Console\Command\ConfigCommand;
+use Lingaro\Config\Model\Config\ConfigRepository;
+use Lingaro\Config\Model\Csv\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -44,9 +48,9 @@ class ConfigCommandTest extends TestCase
 
     const DEFAULT_ENV_VALUE = 'my_env_value';
 
-    const CONFIG_ENCRYPTED_PATH = 'orba_config/config_test_group/encrypted';
+    const CONFIG_ENCRYPTED_PATH = 'lingaro_config/config_test_group/encrypted';
 
-    const CONFIG_ARRAY_SERIALIZED_PATH = 'orba_config/config_test_group/array_serialized';
+    const CONFIG_ARRAY_SERIALIZED_PATH = 'lingaro_config/config_test_group/array_serialized';
 
 
     /** @var ObjectManager */
