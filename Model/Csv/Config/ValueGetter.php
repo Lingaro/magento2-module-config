@@ -95,6 +95,7 @@ class ValueGetter
         }
 
         $backendModel->setValue($value);
+        $backendModel->setPath($path);
         $methodName = self::MODEL_PARSE_METHOD;
         $backendModel->$methodName();
 
